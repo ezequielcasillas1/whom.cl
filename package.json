@@ -8,6 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@shopify/storefront-api-client": "^1.0.9",
+    "axios": "^1.13.2",
     "vue": "^3.4.0"
   },
   "devDependencies": {
@@ -18,4 +20,3 @@
     "vite": "^5.0.0"
   }
 }
-

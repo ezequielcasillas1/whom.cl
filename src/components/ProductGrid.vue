@@ -19,11 +19,24 @@
         </h2>
       </div>
       
+      <!-- Loading State -->
+      <div v-if="loading" class="text-center py-20">
+        <div class="text-gray-400 text-sm tracking-widest uppercase">Loading products...</div>
+      </div>
+      
+      <!-- Error State -->
+      <div v-else-if="error" class="text-center py-20">
+        <div class="text-gray-400 text-sm mb-4">{{ error }}</div>
+        <div class="text-xs text-gray-600">Showing sample products</div>
+      </div>
+      
+      <!-- Products Grid -->
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
         <ProductCard 
-          v-for="product in products" 
+          v-for="(product, index) in displayProducts" 
           :key="product.id"
           :product="product"
+          :index="index"
         />
       </div>
       
@@ -38,52 +51,91 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import ProductCard from './ProductCard.vue'
+import { fetchProducts } from '../services/shopify'
 
-const products = ref([
+const products = ref([])
+const loading = ref(true)
+const error = ref(null)
+
+// Sample fallback products
+const sampleProducts = [
   {
     id: 1,
-    name: 'FAITH TACTICAL JACKET',
-    price: '$189.00',
-    code: '/001',
-    collection: 'FAITH'
+    title: 'FAITH TACTICAL JACKET',
+    priceRange: { minVariantPrice: { amount: '189.00', currencyCode: 'USD' } },
+    handle: 'faith-tactical-jacket',
+    tags: ['FAITH'],
+    images: []
   },
   {
     id: 2,
-    name: 'PURPOSE OVERSIZED HOODIE',
-    price: '$129.00',
-    code: '/002',
-    collection: 'PURPOSE'
+    title: 'PURPOSE OVERSIZED HOODIE',
+    priceRange: { minVariantPrice: { amount: '129.00', currencyCode: 'USD' } },
+    handle: 'purpose-oversized-hoodie',
+    tags: ['PURPOSE'],
+    images: []
   },
   {
     id: 3,
-    name: 'IDENTITY TECHWEAR VEST',
-    price: '$149.00',
-    code: '/003',
-    collection: 'IDENTITY'
+    title: 'IDENTITY TECHWEAR VEST',
+    priceRange: { minVariantPrice: { amount: '149.00', currencyCode: 'USD' } },
+    handle: 'identity-techwear-vest',
+    tags: ['IDENTITY'],
+    images: []
   },
   {
     id: 4,
-    name: 'BELIEVER UTILITY CARGO',
-    price: '$159.00',
-    code: '/004',
-    collection: 'FAITH'
+    title: 'BELIEVER UTILITY CARGO',
+    priceRange: { minVariantPrice: { amount: '159.00', currencyCode: 'USD' } },
+    handle: 'believer-utility-cargo',
+    tags: ['FAITH'],
+    images: []
   },
   {
     id: 5,
-    name: 'COVENANT BASE LAYER',
-    price: '$79.00',
-    code: '/005',
-    collection: 'PURPOSE'
+    title: 'COVENANT BASE LAYER',
+    priceRange: { minVariantPrice: { amount: '79.00', currencyCode: 'USD' } },
+    handle: 'covenant-base-layer',
+    tags: ['PURPOSE'],
+    images: []
   },
   {
     id: 6,
-    name: 'REDEEMED FIELD JACKET',
-    price: '$199.00',
-    code: '/006',
-    collection: 'IDENTITY'
+    title: 'REDEEMED FIELD JACKET',
+    priceRange: { minVariantPrice: { amount: '199.00', currencyCode: 'USD' } },
+    handle: 'redeemed-field-jacket',
+    tags: ['IDENTITY'],
+    images: []
   }
-])
+]
+
+// Load products from Shopify
+const loadProducts = async () => {
+  loading.value = true
+  error.value = null
+  
+  try {
+    const shopifyProducts = await fetchProducts(null, 12)
+    products.value = shopifyProducts
+  } catch (err) {
+    console.error('Failed to load products:', err)
+    error.value = 'Unable to load products from Shopify'
+    products.value = sampleProducts
+  } finally {
+    loading.value = false
+  }
+}
+
+// Display products (Shopify or fallback)
+const displayProducts = computed(() => {
+  return products.value.length > 0 ? products.value : sampleProducts
+})
+
+onMounted(() => {
+  loadProducts()
+})
 </script>
+
 

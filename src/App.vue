@@ -16,3 +16,4 @@ import ProductGrid from './components/ProductGrid.vue'
 import Footer from './components/Footer.vue'
 </script>
 
+

@@ -13,15 +13,139 @@
       
       <div class="flex items-center space-x-6 text-sm tracking-wide uppercase">
         <a href="#account" class="hover:text-gray-400 transition-colors">Account</a>
-        <a href="#bag" class="hover:text-gray-400 transition-colors">Bag (0)</a>
+        <button 
+          @click="toggleCart"
+          class="hover:text-gray-400 transition-colors relative"
+        >
+          Bag ({{ cartCount }})
+          <span v-if="cartCount > 0" class="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mini Cart Dropdown -->
+    <div 
+      v-if="showCart" 
+      class="absolute top-full right-0 w-96 bg-black border-l border-b border-stone-gray shadow-2xl"
+      @click.stop
+    >
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-sm font-bold uppercase tracking-wider">Your Cart</h3>
+          <button @click="showCart = false" class="text-gray-400 hover:text-white">
+            ✕
+          </button>
+        </div>
+
+        <!-- Loading State -->
+        <div v-if="loading" class="text-center py-8 text-gray-500 text-xs">
+          Loading...
+        </div>
+
+        <!-- Empty Cart -->
+        <div v-else-if="cartItems.length === 0" class="text-center py-8">
+          <p class="text-gray-500 text-sm mb-4">Your cart is empty</p>
+          <button 
+            @click="showCart = false"
+            class="text-xs uppercase tracking-wider border border-gray-600 px-6 py-2 hover:border-white transition-colors"
+          >
+            Continue Shopping
+          </button>
+        </div>
+
+        <!-- Cart Items -->
+        <div v-else>
+          <div class="space-y-4 mb-6 max-h-64 overflow-y-auto">
+            <div 
+              v-for="item in cartItems" 
+              :key="item.id"
+              class="flex gap-4 pb-4 border-b border-stone-gray"
+            >
+              <div class="w-20 h-20 bg-stone-gray flex-shrink-0">
+                <img 
+                  v-if="item.image" 
+                  :src="item.image" 
+                  :alt="item.title"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-xs font-semibold uppercase truncate">{{ item.title }}</h4>
+                <p class="text-xs text-gray-500 mt-1">{{ item.variantTitle }}</p>
+                <p class="text-xs text-gray-400 mt-1">${{ item.price }}</p>
+                <div class="flex items-center gap-2 mt-2">
+                  <button 
+                    @click="updateQuantity(item.id, item.quantity - 1)"
+                    class="text-xs px-2 py-1 border border-gray-600 hover:border-white"
+                  >
+                    -
+                  </button>
+                  <span class="text-xs">{{ item.quantity }}</span>
+                  <button 
+                    @click="updateQuantity(item.id, item.quantity + 1)"
+                    class="text-xs px-2 py-1 border border-gray-600 hover:border-white"
+                  >
+                    +
+                  </button>
+                  <button 
+                    @click="removeItem(item.id)"
+                    class="text-xs text-gray-500 hover:text-white ml-auto"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cart Total -->
+          <div class="border-t border-stone-gray pt-4 mb-6">
+            <div class="flex justify-between text-sm font-bold uppercase">
+              <span>Total</span>
+              <span>${{ cartTotal }}</span>
+            </div>
+          </div>
+
+          <!-- Checkout Button -->
+          <a 
+            :href="checkoutUrl"
+            target="_blank"
+            class="block w-full text-center py-3 bg-white text-black hover:bg-gray-200 transition-colors uppercase tracking-wider text-xs font-semibold"
+          >
+            Checkout →
+          </a>
+        </div>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import { useCart } from '../composables/useCart'
+
+const { cartCount, cartItems, cartTotal, loading, loadCart, updateQuantity, removeItem, checkoutUrl } = useCart()
+const showCart = ref(false)
+
+const toggleCart = () => {
+  showCart.value = !showCart.value
+}
+
+// Close cart when clicking outside
+if (typeof window !== 'undefined') {
+  window.addEventListener('click', (e) => {
+    if (showCart.value && !e.target.closest('nav')) {
+      showCart.value = false
+    }
+  })
+}
+
+onMounted(() => {
+  loadCart()
+})
 </script>
 
 <style scoped>
 </style>
+
 
