@@ -53,7 +53,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import ProductCard from './ProductCard.vue'
-import { fetchProducts } from '../services/shopify'
+import { fetchCatalog } from '../services/catalog'
 
 const products = ref([])
 const loading = ref(true)
@@ -117,11 +117,11 @@ const loadProducts = async () => {
   error.value = null
   
   try {
-    const shopifyProducts = await fetchProducts(null, 12)
-    products.value = shopifyProducts
+    const { products: catalogProducts } = await fetchCatalog()
+    products.value = catalogProducts || []
   } catch (err) {
     console.error('Failed to load products:', err)
-    error.value = 'Unable to load products from Shopify'
+    error.value = 'Unable to load products'
     products.value = sampleProducts
   } finally {
     loading.value = false

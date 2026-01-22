@@ -58,7 +58,7 @@
           <div class="space-y-4 mb-6 max-h-64 overflow-y-auto">
             <div 
               v-for="item in cartItems" 
-              :key="item.id"
+              :key="item.sync_variant_id"
               class="flex gap-4 pb-4 border-b border-stone-gray"
             >
               <div class="w-20 h-20 bg-stone-gray flex-shrink-0">
@@ -75,20 +75,20 @@
                 <p class="text-xs text-gray-400 mt-1">${{ item.price }}</p>
                 <div class="flex items-center gap-2 mt-2">
                   <button 
-                    @click="updateQuantity(item.id, item.quantity - 1)"
+                    @click="updateQuantity(item.sync_variant_id, item.quantity - 1)"
                     class="text-xs px-2 py-1 border border-gray-600 hover:border-white"
                   >
                     -
                   </button>
                   <span class="text-xs">{{ item.quantity }}</span>
                   <button 
-                    @click="updateQuantity(item.id, item.quantity + 1)"
+                    @click="updateQuantity(item.sync_variant_id, item.quantity + 1)"
                     class="text-xs px-2 py-1 border border-gray-600 hover:border-white"
                   >
                     +
                   </button>
                   <button 
-                    @click="removeItem(item.id)"
+                    @click="removeItem(item.sync_variant_id)"
                     class="text-xs text-gray-500 hover:text-white ml-auto"
                   >
                     Remove
@@ -106,14 +106,40 @@
             </div>
           </div>
 
+          <!-- Shipping (minimal for quote) -->
+          <div class="border-t border-stone-gray pt-4 mb-4 space-y-3">
+            <div class="grid grid-cols-3 gap-2">
+              <input
+                v-model="shipCountry"
+                maxlength="2"
+                placeholder="US"
+                class="bg-black border border-stone-gray px-3 py-2 text-xs uppercase tracking-wider"
+              />
+              <input
+                v-model="shipState"
+                maxlength="3"
+                placeholder="CA"
+                class="bg-black border border-stone-gray px-3 py-2 text-xs uppercase tracking-wider"
+              />
+              <input
+                v-model="shipZip"
+                maxlength="12"
+                placeholder="ZIP"
+                class="bg-black border border-stone-gray px-3 py-2 text-xs uppercase tracking-wider"
+              />
+            </div>
+            <div class="text-[10px] text-gray-500 tracking-widest uppercase">
+              Used to quote shipping before Stripe checkout.
+            </div>
+          </div>
+
           <!-- Checkout Button -->
-          <a 
-            :href="checkoutUrl"
-            target="_blank"
+          <button
+            @click="onCheckout"
             class="block w-full text-center py-3 bg-white text-black hover:bg-gray-200 transition-colors uppercase tracking-wider text-xs font-semibold"
           >
             Checkout →
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -124,8 +150,11 @@
 import { ref, onMounted } from 'vue'
 import { useCart } from '../composables/useCart'
 
-const { cartCount, cartItems, cartTotal, loading, loadCart, updateQuantity, removeItem, checkoutUrl } = useCart()
+const { cartCount, cartItems, cartTotal, loading, loadCart, updateQuantity, removeItem, startCheckout } = useCart()
 const showCart = ref(false)
+const shipCountry = ref('US')
+const shipState = ref('')
+const shipZip = ref('')
 
 const toggleCart = () => {
   showCart.value = !showCart.value
@@ -143,6 +172,14 @@ if (typeof window !== 'undefined') {
 onMounted(() => {
   loadCart()
 })
+
+const onCheckout = async () => {
+  await startCheckout({
+    country_code: (shipCountry.value || '').toUpperCase(),
+    state_code: (shipState.value || '').toUpperCase(),
+    zip: shipZip.value || ''
+  })
+}
 </script>
 
 <style scoped>

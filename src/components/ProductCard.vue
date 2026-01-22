@@ -105,7 +105,18 @@ const handleAddToCart = async () => {
   
   addingToCart.value = true
   try {
-    const success = await addToCart(variantId.value, 1)
+    const v = props.product.variants?.[0]
+    const success = await addToCart(
+      {
+        sync_variant_id: Number(variantId.value),
+        title: props.product.title,
+        variantTitle: v?.title || '',
+        price: v?.priceV2?.amount || props.product.priceRange?.minVariantPrice?.amount || '0.00',
+        currency: v?.priceV2?.currencyCode || props.product.priceRange?.minVariantPrice?.currencyCode || 'USD',
+        image: productImage.value
+      },
+      1
+    )
     if (success) {
       // Optional: Show success notification
       console.log('Added to cart:', props.product.title)
