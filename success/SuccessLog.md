@@ -54,3 +54,9 @@
 **Files:** src/views/ProductView.vue, src/services/productImages.js
 **Result:** Product image updates to match selected color using local WHM mockups (fallbacks to variant/thumbnail when unavailable).
 
+### [Jan 25, 2026] - About Section Redesign + Product 415695270 Description
+**Status:** SUCCESS ✅
+**Commit:** dce5584
+**Files:** src/components/ProductGrid.vue, netlify/functions/catalog.js
+**Result:** About section redesigned with minimal→grand graphic design focus (3 pillars: TYPE/MARK/WORD). Added custom WHOM-style description for product 415695270 (ember-toned Christ portrait, halo-lines, controlled drip finish).
+

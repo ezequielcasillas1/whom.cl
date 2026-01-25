@@ -14,6 +14,10 @@ function header(event, name) {
 }
 
 function siteOrigin(event) {
+  const override =
+    process.env.GOOGLE_FEED_SITE_URL || process.env.GOOGLE_FEED_ORIGIN
+  if (override) return String(override).replace(/\/+$/, '')
+
   const proto =
     header(event, 'x-forwarded-proto') ||
     header(event, 'X-Forwarded-Proto') ||
@@ -25,7 +29,12 @@ function siteOrigin(event) {
     header(event, 'Host')
 
   if (host) return `${proto}://${host}`
-  return process.env.SITE_URL || process.env.URL || process.env.DEPLOY_PRIME_URL || ''
+  return (
+    process.env.SITE_URL ||
+    process.env.URL ||
+    process.env.DEPLOY_PRIME_URL ||
+    ''
+  )
 }
 
 function xmlEscape(value) {
