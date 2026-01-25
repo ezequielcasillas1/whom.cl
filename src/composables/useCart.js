@@ -1,6 +1,5 @@
 import { ref, computed } from 'vue'
 import { CART_STORAGE_KEY } from '../config/api'
-
 const whomJohn8BlackMockup = new URL(
   '../../WHM-ASSETS/checkout images/lat-unisex-fine-jersey-tee---6901-black-front-6975a1809f263.png',
   import.meta.url
@@ -15,7 +14,6 @@ function isWhmJohn8Title(title) {
   const t = String(title || '').toUpperCase().replace(/[^A-Z0-9]+/g, '')
   return t.includes('WHM') && t.includes('JOHN8') && t.includes('5455')
 }
-
 function readCartFromStorage() {
   try {
     const raw = localStorage.getItem(CART_STORAGE_KEY)
@@ -53,7 +51,6 @@ function normalizeVariantId(id) {
   const s = String(id ?? '').trim().replace(/^#/, '')
   return s || null
 }
-
 export function useCart() {
   // Computed properties
   const cartCount = computed(() => {

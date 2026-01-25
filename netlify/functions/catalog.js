@@ -62,7 +62,6 @@ function descriptionForProductName(name) {
 
   return ''
 }
-
 function normalizeProduct(detail) {
   const p = detail?.result?.sync_product
   const variants = detail?.result?.sync_variants || []

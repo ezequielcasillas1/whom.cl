@@ -35,4 +35,9 @@
 **Files:** src/views/ReturnPolicyView.vue, src/router/index.js, src/components/Footer.vue
 **Result:** Added `/return-policy` page for Merchant Center verification; returns are defects-only and exchanges are not offered except defect replacements.
 
+### [Jan 25, 2026] - Printful + Stripe + Netlify Status + Upload Script
+**Status:** PARTIAL
+**Files:** PRINTFUL_NETLIFY_STRIPE_STATUS_AND_NEXT_STEPS.md, scripts/printful-upload.ps1, WHM-ASSETS/*
+**Result:** Commit 139ce15 - Added end-to-end status/next steps doc and Printful file upload helper; assets added for Printful library usage.
+
 

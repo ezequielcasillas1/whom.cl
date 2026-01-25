@@ -64,7 +64,6 @@ function normalizeImageUrl(raw, siteUrl) {
   const path = s.startsWith('/') ? s : `/${s}`
   return `${base}${path}`
 }
-
 export async function handler(event) {
   if (event.httpMethod !== 'POST') return methodNotAllowed(['POST'])
 
