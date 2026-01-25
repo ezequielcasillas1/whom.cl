@@ -44,7 +44,7 @@
 
 ### [Jan 25, 2026] - Refund / Replacement (Defective Only) Page
 **Status:** SUCCESS ✅
-**Commit:** (pending)
+**Commit:** 88a8950
 **Files:** src/views/RefundsView.vue, src/router/index.js, src/components/Navigation.vue, src/components/Footer.vue, src/views/ReturnPolicyView.vue
 **Result:** Added `/refunds` page linked in top nav + footer; defects-only request supports prefilled email + optional photo upload (PNG/JPG/PDF) via Netlify Forms.
 
