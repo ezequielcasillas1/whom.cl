@@ -62,11 +62,7 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCart } from '../composables/useCart'
-
-const whomJohn8BlackMockup = new URL(
-  '../../WHM-ASSETS/checkout images/lat-unisex-fine-jersey-tee---6901-black-front-6975a1809f263.png',
-  import.meta.url
-).href
+import { getPrimaryProductImageUrl } from '../services/productImages'
 
 const props = defineProps({
   product: {
@@ -85,13 +81,7 @@ const addingToCart = ref(false)
 
 // Get product image
 const productImage = computed(() => {
-  const title = String(props.product?.title || '').toUpperCase()
-  const normalized = title.replace(/[^A-Z0-9]+/g, '')
-  // Force WHM John 8:54-55 to use the local mockup
-  if (normalized.includes('WHM') && normalized.includes('JOHN8') && normalized.includes('5455')) {
-    return whomJohn8BlackMockup
-  }
-  return props.product.images?.[0]?.url || null
+  return getPrimaryProductImageUrl(props.product)
 })
 
 // Tee model hint (shown next to title + used as fallback description)
@@ -128,6 +118,10 @@ const isAvailable = computed(() => {
   return props.product.variants?.[0]?.availableForSale !== false
 })
 
+const requiresVariantSelection = computed(() => {
+  return (props.product?.variants || []).length > 1
+})
+
 // Get first variant ID
 const variantId = computed(() => {
   return props.product.variants?.[0]?.id
@@ -135,6 +129,11 @@ const variantId = computed(() => {
 
 // Handle add to cart
 const handleAddToCart = async () => {
+  // If there are multiple variants (sizes/colors), force selection on product page
+  if (requiresVariantSelection.value) {
+    handleProductClick()
+    return
+  }
   if (!variantId.value || addingToCart.value) return
   
   addingToCart.value = true

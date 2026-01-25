@@ -37,6 +37,11 @@
               </RouterLink>
             </li>
             <li>
+              <RouterLink to="/refunds" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Refund / Replacement
+              </RouterLink>
+            </li>
+            <li>
               <a href="#privacy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
                 Privacy Policy
               </a>
@@ -53,16 +58,6 @@
             <li>
               <a href="#instagram" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
                 Instagram
-              </a>
-            </li>
-            <li>
-              <a href="#twitter" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
-                Twitter
-              </a>
-            </li>
-            <li>
-              <a href="#youtube" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
-                YouTube
               </a>
             </li>
           </ul>

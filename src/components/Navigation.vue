@@ -10,6 +10,7 @@
         <RouterLink to="/collections" class="hover:text-gray-400 transition-colors">Collections</RouterLink>
         <RouterLink :to="{ path: '/collections', hash: '#whom-signatures' }" class="hover:text-gray-400 transition-colors">WHOM Signatures</RouterLink>
         <RouterLink :to="{ path: '/', hash: '#about' }" class="hover:text-gray-400 transition-colors">About</RouterLink>
+        <RouterLink to="/refunds" class="hover:text-gray-400 transition-colors">Refund / Replacement</RouterLink>
       </div>
       
       <div class="flex items-center space-x-6 text-sm tracking-wide uppercase">

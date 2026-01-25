@@ -15,6 +15,11 @@ can you have the "X" Wrong pop up message appear only in the middle of the page,
 - Include required fields (id, title, link, image, price, availability, brand)
 - Feed URL: `/google-product-feed.xml`
 
+3) Refund / Replacement (Defective Only)
+- Add `/refunds` page linked from top nav + footer
+- Provide a defects-only request flow (prefilled email to support)
+- In Stripe receipt email, include a link to `/refunds` (Stripe Dashboard receipt footer)
+
 ---
 
 ## **Mission Briefing: Standard Operating Protocol**

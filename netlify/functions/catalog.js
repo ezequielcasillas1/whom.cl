@@ -8,6 +8,83 @@ let cache = {
 
 const CACHE_MS = 60_000
 
+function normalizeSizeToken(raw) {
+  const s = String(raw || '').trim()
+  if (!s) return null
+  const n = s.toUpperCase().replace(/[\s_-]+/g, '')
+  const map = {
+    XS: 'XS',
+    S: 'S',
+    M: 'M',
+    L: 'L',
+    XL: 'XL',
+    XXL: '2XL',
+    '2XL': '2XL',
+    XXXL: '3XL',
+    '3XL': '3XL',
+    XXXXL: '4XL',
+    '4XL': '4XL',
+    XXXXXL: '5XL',
+    '5XL': '5XL'
+  }
+  return map[n] || null
+}
+
+function parseVariantSelectedOptions(variantName) {
+  const raw = String(variantName || '').trim()
+  if (!raw) return []
+
+  // Printful store variant names are typically like: "Black / S"
+  const parts = raw
+    .split('/')
+    .map(s => String(s || '').trim())
+    .filter(Boolean)
+
+  let size = null
+  let colorParts = []
+
+  for (const p of parts) {
+    const maybeSize = normalizeSizeToken(p)
+    if (maybeSize && !size) {
+      size = maybeSize
+      continue
+    }
+    colorParts.push(p)
+  }
+
+  // If we didn't find size in parts, try last token by space (e.g., "Black S")
+  if (!size && parts.length === 1) {
+    const bySpace = raw.split(/\s+/).map(s => s.trim()).filter(Boolean)
+    const last = bySpace[bySpace.length - 1]
+    const maybeSize = normalizeSizeToken(last)
+    if (maybeSize) {
+      size = maybeSize
+      colorParts = bySpace.slice(0, -1)
+    }
+  }
+
+  const color = colorParts.join(' / ').trim() || null
+
+  const selectedOptions = []
+  if (color) selectedOptions.push({ name: 'Color', value: color })
+  if (size) selectedOptions.push({ name: 'Size', value: size })
+  return selectedOptions
+}
+
+function extractVariantImageUrl(v) {
+  // Be defensive: Printful shapes vary by endpoint/version
+  const direct = v?.preview_url || v?.thumbnail_url || v?.image_url || v?.image || null
+  if (direct) return direct
+
+  const files = Array.isArray(v?.files) ? v.files : []
+  const f0 = files[0]
+  if (f0?.preview_url) return f0.preview_url
+  if (f0?.thumbnail_url) return f0.thumbnail_url
+  if (f0?.url) return f0.url
+
+  return null
+}
+
 function getQueryParams(event) {
   return event?.queryStringParameters || {}
 }
@@ -93,6 +170,8 @@ function normalizeProduct(detail) {
         amount: String(v?.retail_price || '0.00'),
         currencyCode: p?.currency || process.env.PRINTFUL_CURRENCY || 'USD'
       },
+      image: extractVariantImageUrl(v),
+      selectedOptions: parseVariantSelectedOptions(v?.name),
       // Needed later for shipping quotes/order creation
       printful: {
         sync_variant_id: String(v?.id ?? '').replace(/^#/, ''),

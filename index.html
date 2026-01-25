@@ -9,6 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Netlify Forms: Defective Item Request (for SPA routes) -->
+  <form name="defective-item" netlify netlify-honeypot="bot-field" hidden enctype="multipart/form-data">
+    <input name="bot-field" />
+    <input type="hidden" name="form-name" value="defective-item" />
+    <input type="email" name="email" />
+    <input type="text" name="orderId" />
+    <textarea name="issue"></textarea>
+    <textarea name="photoLinks"></textarea>
+    <input type="file" name="attachments" multiple />
+  </form>
+
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
 </body>

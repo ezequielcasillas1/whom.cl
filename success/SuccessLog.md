@@ -42,3 +42,9 @@
 **Files:** src/views/ReturnPolicyView.vue, src/router/index.js, src/components/Footer.vue
 **Result:** Added `/return-policy` page for Merchant Center; defects-only returns and no exchanges (defect replacements only).
 
+### [Jan 25, 2026] - Refund / Replacement (Defective Only) Page
+**Status:** SUCCESS ✅
+**Commit:** (pending)
+**Files:** src/views/RefundsView.vue, src/router/index.js, src/components/Navigation.vue, src/components/Footer.vue, src/views/ReturnPolicyView.vue
+**Result:** Added `/refunds` page linked in top nav + footer; defects-only request supports prefilled email + optional photo upload (PNG/JPG/PDF) via Netlify Forms.
+

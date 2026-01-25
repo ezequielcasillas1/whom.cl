@@ -65,9 +65,36 @@
 
             <div class="border border-stone-gray bg-black/30 p-6 space-y-4">
               <div class="text-xs tracking-widest uppercase text-gray-500">/ Purchase</div>
+
+              <div v-if="hasVariantOptions" class="space-y-4">
+                <div v-if="colorOptions.length" class="space-y-2">
+                  <div class="text-[11px] tracking-widest uppercase text-gray-500">Color</div>
+                  <select
+                    v-model="selectedColor"
+                    class="w-full bg-black/40 border border-stone-gray px-3 py-3 text-sm text-gray-200 focus:outline-none focus:ring-1 focus:ring-white/30"
+                  >
+                    <option v-for="c in colorOptions" :key="c" :value="c">{{ c }}</option>
+                  </select>
+                </div>
+
+                <div v-if="sizeOptions.length" class="space-y-2">
+                  <div class="text-[11px] tracking-widest uppercase text-gray-500">Size</div>
+                  <select
+                    v-model="selectedSize"
+                    class="w-full bg-black/40 border border-stone-gray px-3 py-3 text-sm text-gray-200 focus:outline-none focus:ring-1 focus:ring-white/30"
+                  >
+                    <option v-for="s in sizeOptions" :key="s" :value="s">{{ s }}</option>
+                  </select>
+                </div>
+
+                <div v-if="!selectedVariant" class="text-xs text-gray-500">
+                  Please select a valid combination.
+                </div>
+              </div>
+
               <button
                 @click="handleAddToCart"
-                :disabled="!isAvailable || addingToCart"
+                :disabled="!isAvailable || addingToCart || !selectedVariant"
                 class="w-full py-4 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {{ addingToCart ? 'Adding...' : isAvailable ? 'Add to Cart' : 'Out of Stock' }}
@@ -101,11 +128,12 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { RouterLink } from 'vue-router'
 import { fetchCatalog } from '../services/catalog'
 import { useCart } from '../composables/useCart'
+import { getPrimaryProductImageUrl } from '../services/productImages'
 
 const route = useRoute()
 const { addToCart } = useCart()
@@ -118,11 +146,6 @@ const addingToCart = ref(false)
 const productId = computed(() => String(route?.params?.id || '').trim())
 
 const canonicalPath = computed(() => `/product/${encodeURIComponent(productId.value)}`)
-
-const imageUrl = computed(() => {
-  const p = product.value
-  return p?.images?.[0]?.url || p?.thumbnail || null
-})
 
 const productCollection = computed(() => {
   const tags = product.value?.tags || []
@@ -141,14 +164,94 @@ const formattedPrice = computed(() => {
   return `$${parseFloat(amount).toFixed(2)} ${currency !== 'USD' ? currency : ''}`
 })
 
-const isAvailable = computed(() => {
-  return product.value?.variants?.[0]?.availableForSale !== false
+function getSelectedOptionValue(variant, optionName) {
+  const opts = variant?.selectedOptions || []
+  const found = opts.find(o => String(o?.name || '').toLowerCase() === String(optionName || '').toLowerCase())
+  return found?.value ? String(found.value) : null
+}
+
+const selectedColor = ref(null)
+const selectedSize = ref(null)
+
+const optionsIndex = computed(() => {
+  const map = new Map()
+  const variants = product.value?.variants || []
+  for (const v of variants) {
+    const opts = v?.selectedOptions || []
+    for (const o of opts) {
+      const name = String(o?.name || '').trim()
+      const value = String(o?.value || '').trim()
+      if (!name || !value) continue
+      const key = name.toLowerCase()
+      if (!map.has(key)) map.set(key, new Set())
+      map.get(key).add(value)
+    }
+  }
+  return map
 })
 
-const firstVariant = computed(() => product.value?.variants?.[0] || null)
+const colorOptions = computed(() => {
+  const set = optionsIndex.value.get('color')
+  return set ? Array.from(set) : []
+})
+
+const sizeOptions = computed(() => {
+  const set = optionsIndex.value.get('size')
+  const arr = set ? Array.from(set) : []
+  const order = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']
+  arr.sort((a, b) => {
+    const ia = order.indexOf(String(a).toUpperCase())
+    const ib = order.indexOf(String(b).toUpperCase())
+    if (ia === -1 && ib === -1) return String(a).localeCompare(String(b))
+    if (ia === -1) return 1
+    if (ib === -1) return -1
+    return ia - ib
+  })
+  return arr
+})
+
+const hasVariantOptions = computed(() => colorOptions.value.length > 1 || sizeOptions.value.length > 1)
+
+watch(
+  () => product.value,
+  p => {
+    if (!p) return
+    if (!selectedColor.value && colorOptions.value.length) selectedColor.value = colorOptions.value[0]
+    if (!selectedSize.value && sizeOptions.value.length) selectedSize.value = sizeOptions.value[0]
+  },
+  { immediate: true }
+)
+
+const selectedVariant = computed(() => {
+  const variants = product.value?.variants || []
+  if (!variants.length) return null
+
+  const needsColor = colorOptions.value.length > 0
+  const needsSize = sizeOptions.value.length > 0
+
+  if (!needsColor && !needsSize) return variants[0]
+
+  return (
+    variants.find(v => {
+      const c = getSelectedOptionValue(v, 'Color')
+      const s = getSelectedOptionValue(v, 'Size')
+      const okColor = !needsColor || (selectedColor.value && c === selectedColor.value)
+      const okSize = !needsSize || (selectedSize.value && s === selectedSize.value)
+      return okColor && okSize
+    }) || null
+  )
+})
+
+const imageUrl = computed(() => {
+  return getPrimaryProductImageUrl(product.value, selectedVariant.value)
+})
+
+const isAvailable = computed(() => {
+  return selectedVariant.value?.availableForSale !== false
+})
 
 const handleAddToCart = async () => {
-  const v = firstVariant.value
+  const v = selectedVariant.value
   if (!v?.id || addingToCart.value) return
 
   addingToCart.value = true
@@ -175,6 +278,8 @@ async function loadProduct() {
   loading.value = true
   error.value = null
   product.value = null
+  selectedColor.value = null
+  selectedSize.value = null
 
   try {
     const { products } = await fetchCatalog()

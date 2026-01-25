@@ -15,6 +15,16 @@
     <section class="py-16 bg-deep-black">
       <div class="max-w-4xl mx-auto px-6 space-y-10">
         <div class="border border-stone-gray bg-black/30 p-6">
+          <div class="text-xs tracking-widest uppercase text-gray-500 mb-2">/ Need help?</div>
+          <p class="text-sm text-gray-300 leading-relaxed">
+            For defective items, submit a request here:
+            <RouterLink class="underline underline-offset-4 hover:text-white" to="/refunds">
+              Refund / Replacement
+            </RouterLink>
+          </p>
+        </div>
+
+        <div class="border border-stone-gray bg-black/30 p-6">
           <div class="text-xs tracking-widest uppercase text-gray-500 mb-2">/ Returns</div>
           <ul class="space-y-2 text-sm text-gray-300 leading-relaxed">
             <li><span class="text-gray-500">-</span> Returns are accepted for <span class="font-semibold">defective, damaged, or misprinted</span> items only.</li>
@@ -61,5 +71,6 @@
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router'
 </script>
 

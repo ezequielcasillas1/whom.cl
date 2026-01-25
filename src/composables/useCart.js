@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { CART_STORAGE_KEY } from '../config/api'
-const whomJohn8BlackMockup = new URL(
-  '../../WHM-ASSETS/checkout images/lat-unisex-fine-jersey-tee---6901-black-front-6975a1809f263.png',
+const whmJohn8BlackMockup = new URL(
+  '../../WHM-ASSETS/Product Id/WHMSIG-SHIRTS/WHM-JOHN8-/lat-unisex-fine-jersey-tee---6901-black-front-69766ce69bb16.png',
   import.meta.url
 ).href
 
@@ -28,7 +28,7 @@ function readCartFromStorage() {
       const usesOldMock =
         img.includes('lat-unisex-fine-jersey-tee---6901-black-front-69759e81482f4.png')
       if (isWhmJohn8Title(title) && (!i.image || usesOldMock)) {
-        return { ...i, image: whomJohn8BlackMockup }
+        return { ...i, image: whmJohn8BlackMockup }
       }
       return i
     })

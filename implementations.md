@@ -40,4 +40,9 @@
 **Files:** PRINTFUL_NETLIFY_STRIPE_STATUS_AND_NEXT_STEPS.md, scripts/printful-upload.ps1, WHM-ASSETS/*
 **Result:** Commit 139ce15 - Added end-to-end status/next steps doc and Printful file upload helper; assets added for Printful library usage.
 
+### [Jan 25, 2026] - Refund / Replacement (Defective Only) Page
+**Status:** SUCCESS ✅
+**Files:** src/views/RefundsView.vue, src/router/index.js, src/components/Navigation.vue, src/components/Footer.vue, src/views/ReturnPolicyView.vue, Instructions/request.md
+**Result:** Added `/refunds` page and linked it in top nav + footer; defects-only request supports prefilled email + optional photo upload (PNG/JPG/PDF) via Netlify Forms.
+
 
