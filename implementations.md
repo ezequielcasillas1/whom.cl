@@ -45,4 +45,9 @@
 **Files:** src/views/RefundsView.vue, src/router/index.js, src/components/Navigation.vue, src/components/Footer.vue, src/views/ReturnPolicyView.vue, Instructions/request.md
 **Result:** Added `/refunds` page and linked it in top nav + footer; defects-only request supports prefilled email + optional photo upload (PNG/JPG/PDF) via Netlify Forms.
 
+### [Jan 25, 2026] - Product Variant Image Switch (Color)
+**Status:** SUCCESS ✅
+**Files:** src/views/ProductView.vue, src/services/productImages.js
+**Result:** Product image now updates to the correct color mockup when users change the Color option (with safe fallback when a variant match is missing).
+
 

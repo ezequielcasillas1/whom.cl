@@ -243,7 +243,17 @@ const selectedVariant = computed(() => {
 })
 
 const imageUrl = computed(() => {
-  return getPrimaryProductImageUrl(product.value, selectedVariant.value)
+  // If the combination is invalid (no matching variant), still show the color-selected image.
+  const pseudoVariant =
+    selectedVariant.value ||
+    {
+      selectedOptions: [
+        ...(selectedColor.value ? [{ name: 'Color', value: selectedColor.value }] : []),
+        ...(selectedSize.value ? [{ name: 'Size', value: selectedSize.value }] : [])
+      ]
+    }
+
+  return getPrimaryProductImageUrl(product.value, pseudoVariant)
 })
 
 const isAvailable = computed(() => {

@@ -103,14 +103,35 @@ function getSelectedOptionValue(variant, optionName) {
   return found?.value ? String(found.value) : null
 }
 
+function guessColorKeyFromVariant(variant, override) {
+  if (!override?.byColorKey) return null
+
+  // Prefer explicit selected options
+  const color = getSelectedOptionValue(variant, 'Color')
+  const colorKey = normalizeKey(color)
+  if (colorKey && override.byColorKey[colorKey]) return colorKey
+
+  // Fall back to parsing the variant title/name (common format: "Color / Size")
+  const rawTitle = String(variant?.title || variant?.name || '').trim()
+  if (rawTitle) {
+    const first = rawTitle.split('/')[0]?.trim()
+    const firstKey = normalizeKey(first)
+    if (firstKey && override.byColorKey[firstKey]) return firstKey
+
+    const normalizedTitle = normalizeKey(rawTitle)
+    for (const k of Object.keys(override.byColorKey)) {
+      if (k && normalizedTitle.includes(k)) return k
+    }
+  }
+
+  return null
+}
+
 export function getPrimaryProductImageUrl(product, selectedVariant = null) {
   const override = getProductImageOverride(product)
   if (override) {
-    const color = getSelectedOptionValue(selectedVariant, 'Color')
-    const colorKey = normalizeKey(color)
-    if (colorKey && override?.byColorKey?.[colorKey]) {
-      return override.byColorKey[colorKey]
-    }
+    const key = guessColorKeyFromVariant(selectedVariant, override)
+    if (key) return override.byColorKey[key]
     if (override?.primary) return override.primary
   }
 
