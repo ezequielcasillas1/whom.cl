@@ -64,6 +64,31 @@ function normalizeImageUrl(raw, siteUrl) {
   const path = s.startsWith('/') ? s : `/${s}`
   return `${base}${path}`
 }
+
+function resolveSiteUrl() {
+  // Netlify provides URL/DEPLOY_PRIME_URL automatically. Prefer those.
+  return (
+    process.env.URL ||
+    process.env.DEPLOY_PRIME_URL ||
+    process.env.SITE_URL ||
+    'http://localhost:3000'
+  )
+}
+
+function extractPrintfulVariantImage(result) {
+  // Prefer variant-level mockup/preview images if available.
+  const files = Array.isArray(result?.files) ? result.files : []
+  const f0 = files[0]
+  const fromFiles =
+    f0?.preview_url ||
+    f0?.thumbnail_url ||
+    f0?.url ||
+    null
+  if (fromFiles) return fromFiles
+
+  // Fallback to product image (may be design-only, but better than nothing)
+  return result?.product?.image || null
+}
 export async function handler(event) {
   if (event.httpMethod !== 'POST') return methodNotAllowed(['POST'])
 
@@ -86,7 +111,7 @@ export async function handler(event) {
 
   try {
     const currency = process.env.PRINTFUL_CURRENCY || 'USD'
-    const siteUrl = process.env.SITE_URL || 'http://localhost:3000'
+    const siteUrl = resolveSiteUrl()
 
     // Validate items server-side via Printful store variant endpoint
     const variantDetails = await Promise.all(
@@ -109,7 +134,7 @@ export async function handler(event) {
           variant_id: result?.variant_id,
           image:
             normalizeImageUrl(it?.image, siteUrl) ||
-            normalizeImageUrl(result?.product?.image, siteUrl) ||
+            normalizeImageUrl(extractPrintfulVariantImage(result), siteUrl) ||
             null
         }
       })

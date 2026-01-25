@@ -2,14 +2,36 @@
   <section id="shop" class="py-32 bg-deep-black">
     <div class="max-w-7xl mx-auto px-6">
       <!-- About Section -->
-      <div id="about" class="mb-32 text-center max-w-4xl mx-auto scroll-mt-24">
-        <div class="text-xs tracking-widest mb-8 text-gray-500">/ WHO ARE WE?</div>
-        <p class="text-2xl md:text-3xl text-gray-200 leading-relaxed tracking-wide mb-12">
-          OUR DESIGNS ARE INSPIRED BY SCRIPTURE AND MODERN FAITH,
-          COMBINED WITH A MINIMALIST, INTENTIONAL AESTHETIC. WHOM.CLOTHING
-          MERGES BELIEF AND FASHION TO CREATE APPAREL THAT SPEAKS
-          PURPOSE INTO EVERYDAY WEAR.
+      <div id="about" class="mb-32 max-w-5xl mx-auto scroll-mt-24">
+        <div class="text-xs tracking-widest mb-4 text-gray-500 uppercase">/ About</div>
+        <h2 class="text-4xl md:text-6xl font-black editorial-spacing mb-6">
+          MINIMAL → GRAND_
+        </h2>
+        <p class="text-sm md:text-base text-gray-300 leading-relaxed tracking-wide max-w-3xl">
+          WHOM.CLOTHING is scripture-first graphic design: disciplined minimalism, editorial spacing, and bold marks
+          that scale from quiet detail to statement piece.
         </p>
+
+        <div class="mt-10 grid sm:grid-cols-3 gap-4">
+          <div class="border border-stone-gray bg-black/30 p-5">
+            <div class="text-[11px] tracking-widest uppercase text-gray-500 mb-2">01 / TYPE</div>
+            <div class="text-sm text-gray-200 tracking-wide leading-relaxed">
+              Clean typography. Heavy restraint. Meaning carried by space.
+            </div>
+          </div>
+          <div class="border border-stone-gray bg-black/30 p-5">
+            <div class="text-[11px] tracking-widest uppercase text-gray-500 mb-2">02 / MARK</div>
+            <div class="text-sm text-gray-200 tracking-wide leading-relaxed">
+              Minimal geometry—built to read from a distance.
+            </div>
+          </div>
+          <div class="border border-stone-gray bg-black/30 p-5">
+            <div class="text-[11px] tracking-widest uppercase text-gray-500 mb-2">03 / WORD</div>
+            <div class="text-sm text-gray-200 tracking-wide leading-relaxed">
+              Scripture-indexed references. Faith, not aesthetic—first.
+            </div>
+          </div>
+        </div>
       </div>
       
       <!-- Featured Products -->

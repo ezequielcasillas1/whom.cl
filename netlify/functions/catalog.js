@@ -8,6 +8,13 @@ let cache = {
 
 const CACHE_MS = 60_000
 
+const CUSTOM_PRODUCT_DESCRIPTIONS_BY_ID = new Map([
+  [
+    '415695270',
+    'WHOM SIGNATURES. John 8:54–55. Ember-toned Christ portrait framed in radiant halo-lines with a controlled drip finish—minimal geometry, grand proclamation. Built for believers who move quiet but carry weight.'
+  ]
+])
+
 function normalizeSizeToken(raw) {
   const s = String(raw || '').trim()
   if (!s) return null
@@ -129,7 +136,11 @@ function tagsForProductName(name) {
   return uniqTags(tags)
 }
 
-function descriptionForProductName(name) {
+function descriptionForProduct(id, name) {
+  const idKey = String(id ?? '').trim()
+  const custom = CUSTOM_PRODUCT_DESCRIPTIONS_BY_ID.get(idKey)
+  if (custom) return custom
+
   const n = String(name || '').trim()
   const up = n.toUpperCase()
 
@@ -147,11 +158,12 @@ function normalizeProduct(detail) {
     .filter(n => Number.isFinite(n))
   const minPrice = prices.length ? Math.min(...prices) : 0
   const title = p?.name || 'Product'
+  const id = String(p?.id ?? '')
 
   return {
-    id: String(p?.id ?? ''),
+    id,
     title,
-    description: descriptionForProductName(title),
+    description: descriptionForProduct(id, title),
     thumbnail: p?.thumbnail_url || null,
     // Simple UI fields that mirror Shopify-ish shape used by components today
     tags: tagsForProductName(title),

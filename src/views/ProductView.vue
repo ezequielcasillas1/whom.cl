@@ -128,7 +128,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { RouterLink } from 'vue-router'
 import { fetchCatalog } from '../services/catalog'
@@ -306,5 +306,12 @@ async function loadProduct() {
 onMounted(() => {
   loadProduct()
 })
+
+// When returning from external checkout (bfcache restore), rehydrate state to avoid stale/incorrect images.
+function handlePageShow(e) {
+  if (e?.persisted) loadProduct()
+}
+onMounted(() => window.addEventListener('pageshow', handlePageShow))
+onUnmounted(() => window.removeEventListener('pageshow', handlePageShow))
 </script>
 
