@@ -32,9 +32,9 @@
               </a>
             </li>
             <li>
-              <a href="#shipping" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
-                Shipping & Returns
-              </a>
+              <RouterLink to="/return-policy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Return Policy
+              </RouterLink>
             </li>
             <li>
               <a href="#privacy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
@@ -142,6 +142,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const currentYear = ref(new Date().getFullYear())
 </script>

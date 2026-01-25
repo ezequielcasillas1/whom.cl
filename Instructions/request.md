@@ -3,6 +3,18 @@ can you have the "X" Wrong pop up message appear only in the middle of the page,
 
 }
 
+1) WHOM SIGNATURES page/section
+- Add a dedicated section linked from nav + collections
+- Explain what “WHOM SIGNATURES” means (OT → NT “whom” study + design intent)
+- Include a verse index (curated list + link to full list by translation)
+- Show the WHOM SIGNATURES products on that section
+
+2) Google Merchant Center (Google Shopping) feed
+- Add a public XML product feed endpoint for Merchant Center to fetch
+- Source products from Printful catalog (`/api/catalog`)
+- Include required fields (id, title, link, image, price, availability, brand)
+- Feed URL: `/google-product-feed.xml`
+
 ---
 
 ## **Mission Briefing: Standard Operating Protocol**

@@ -36,9 +36,21 @@
       <div class="text-xs tracking-widest text-gray-500 uppercase">
         {{ productCollection }}
       </div>
-      <h3 class="text-sm font-semibold tracking-wide uppercase group-hover:text-gray-400 transition-colors">
-        {{ product.title }}
+      <h3 class="text-sm font-semibold tracking-wide uppercase group-hover:text-gray-400 transition-colors flex flex-wrap items-baseline gap-x-2">
+        <span>{{ product.title }}</span>
+        <span
+          v-if="productModelHint"
+          class="text-[10px] font-normal tracking-wide text-gray-500 normal-case"
+        >
+          ({{ productModelHint }})
+        </span>
       </h3>
+      <p v-if="product.description" class="text-xs text-gray-500 tracking-wide truncate">
+        {{ product.description }}
+      </p>
+      <p v-else-if="productModelHint" class="text-xs text-gray-500 tracking-wide truncate">
+        {{ productModelHint }}
+      </p>
       <p class="text-sm text-gray-400">
         {{ formattedPrice }}
       </p>
@@ -48,7 +60,13 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useCart } from '../composables/useCart'
+
+const whomJohn8BlackMockup = new URL(
+  '../../WHM-ASSETS/checkout images/lat-unisex-fine-jersey-tee---6901-black-front-6975a1809f263.png',
+  import.meta.url
+).href
 
 const props = defineProps({
   product: {
@@ -61,12 +79,28 @@ const props = defineProps({
   }
 })
 
+const router = useRouter()
 const { addToCart } = useCart()
 const addingToCart = ref(false)
 
 // Get product image
 const productImage = computed(() => {
+  const title = String(props.product?.title || '').toUpperCase()
+  const normalized = title.replace(/[^A-Z0-9]+/g, '')
+  // Force WHM John 8:54-55 to use the local mockup
+  if (normalized.includes('WHM') && normalized.includes('JOHN8') && normalized.includes('5455')) {
+    return whomJohn8BlackMockup
+  }
   return props.product.images?.[0]?.url || null
+})
+
+// Tee model hint (shown next to title + used as fallback description)
+const productModelHint = computed(() => {
+  const title = String(props.product?.title || '').toUpperCase()
+  const normalized = title.replace(/[^A-Z0-9]+/g, '')
+  const isWhmJohn8 = normalized.includes('WHM') && normalized.includes('JOHN8')
+  if (isWhmJohn8) return 'LAT Unisex Fine Jersey Tee'
+  return null
 })
 
 // Get product code (using index)
@@ -77,7 +111,7 @@ const productCode = computed(() => {
 // Get collection from tags
 const productCollection = computed(() => {
   const tags = props.product.tags || []
-  const collections = ['FAITH', 'PURPOSE', 'IDENTITY']
+  const collections = ['FAITH', 'PURPOSE', 'IDENTITY', 'WHOM SIGNATURES']
   const found = tags.find(tag => collections.includes(tag.toUpperCase()))
   return found || 'COLLECTION'
 })
@@ -105,7 +139,18 @@ const handleAddToCart = async () => {
   
   addingToCart.value = true
   try {
-    const success = await addToCart(variantId.value, 1)
+    const v = props.product.variants?.[0]
+    const success = await addToCart(
+      {
+        sync_variant_id: String(variantId.value),
+        title: props.product.title,
+        variantTitle: v?.title || '',
+        price: v?.priceV2?.amount || props.product.priceRange?.minVariantPrice?.amount || '0.00',
+        currency: v?.priceV2?.currencyCode || props.product.priceRange?.minVariantPrice?.currencyCode || 'USD',
+        image: productImage.value
+      },
+      1
+    )
     if (success) {
       // Optional: Show success notification
       console.log('Added to cart:', props.product.title)
@@ -119,8 +164,9 @@ const handleAddToCart = async () => {
 
 // Handle product click (navigate to product page)
 const handleProductClick = () => {
-  // TODO: Navigate to product detail page
-  console.log('Product clicked:', props.product.handle)
+  const id = String(props.product?.id || '').trim()
+  if (!id) return
+  router.push({ name: 'product', params: { id } })
 }
 </script>
 

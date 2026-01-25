@@ -27,9 +27,9 @@
               <div class="text-xs text-gray-500 italic mb-6">
                 "This is My beloved Son, in whom I am well pleased." — Matthew 3:17
               </div>
-              <a href="#faith" class="inline-block px-8 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs">
+              <RouterLink :to="{ path: '/collections', hash: '#faith' }" class="inline-block px-8 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs">
                 View Collection →
-              </a>
+              </RouterLink>
             </div>
             <div class="order-1 md:order-2">
               <div class="aspect-square bg-stone-gray"></div>
@@ -54,9 +54,9 @@
               <div class="text-xs text-gray-500 italic mb-6">
                 "Whom I shall send to you from the Father" — John 15:26
               </div>
-              <a href="#purpose" class="inline-block px-8 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs">
+              <RouterLink :to="{ path: '/collections', hash: '#purpose' }" class="inline-block px-8 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs">
                 View Collection →
-              </a>
+              </RouterLink>
             </div>
           </div>
         </div>
@@ -75,12 +75,36 @@
               <div class="text-xs text-gray-500 italic mb-6">
                 "But whom do you say that I am?" — Matthew 16:15
               </div>
-              <a href="#identity" class="inline-block px-8 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs">
+              <RouterLink :to="{ path: '/collections', hash: '#identity' }" class="inline-block px-8 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs">
                 View Collection →
-              </a>
+              </RouterLink>
             </div>
             <div class="order-1 md:order-2">
               <div class="aspect-square bg-stone-gray"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collection 4: WHOM SIGNATURES -->
+        <div class="collection-item">
+          <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="order-2">
+              <div class="aspect-square bg-stone-gray"></div>
+            </div>
+            <div class="order-1">
+              <div class="text-xs tracking-widest mb-4 text-gray-500">/004</div>
+              <h3 class="text-6xl font-black mb-6 editorial-spacing">
+                WHOM SIGNATURES <span class="text-4xl text-gray-600">(—)</span>
+              </h3>
+              <p class="text-gray-300 tracking-wide leading-relaxed mb-8 max-w-md">
+                LIMITED MARKS. SCRIPTURE-FIRST STATEMENTS. BUILT FOR THOSE WHO WEAR THE WORD WITHOUT COMPROMISE.
+              </p>
+              <div class="text-xs text-gray-500 italic mb-6">
+                "My Father… of whom you say that He is your God." — John 8:54–55
+              </div>
+              <RouterLink :to="{ path: '/collections', hash: '#whom-signatures' }" class="inline-block px-8 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs">
+                View Collection →
+              </RouterLink>
             </div>
           </div>
         </div>
@@ -90,6 +114,7 @@
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router'
 </script>
 
 <style scoped>

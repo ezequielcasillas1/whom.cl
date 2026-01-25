@@ -12,3 +12,33 @@
 **Files:** Complete Vue.js project structure with 13+ files
 **Result:** Built modern Christian fashion e-commerce site inspired by techwear aesthetic. Implemented minimal dark design, 3 collections with biblical themes, responsive layout, and scripture integration.
 
+### [Jan 25, 2026] - Account Coming Soon Notice
+**Status:** SUCCESS ✅
+**Commit:** Pending
+**Files:** src/components/AccountSection.vue, src/components/Navigation.vue, src/App.vue
+**Result:** Account tab now scrolls to a “Coming Soon” section; nav shows “SOON”.
+
+### [Jan 25, 2026] - WHOM SIGNATURES Collection + WHM John 8:54–55
+**Status:** SUCCESS ✅
+**Commit:** Pending
+**Files:** netlify/functions/catalog.js, netlify/functions/create-checkout-session.js, netlify/functions/stripe-webhook.js, src/components/ProductCard.vue, src/components/CollectionsShowcase.vue, src/composables/useCart.js
+**Result:** WHM products auto-tagged as “WHOM SIGNATURES”; John 8:54–55 description added; cart/checkout supports alphanumeric Printful variant IDs.
+
+### [Jan 25, 2026] - WHOM SIGNATURES Page
+**Status:** SUCCESS ✅
+**Commit:** Pending
+**Files:** src/components/WhomSignaturesSection.vue, src/components/Navigation.vue, src/App.vue
+**Result:** Added WHOM SIGNATURES section with collection explanation, curated verse index + full search link, and WHOM SIGNATURES product strip.
+
+### [Jan 25, 2026] - Collections Page (All Collections + Search/Sort/Filter)
+**Status:** SUCCESS ✅
+**Commit:** Pending
+**Files:** src/views/CollectionsView.vue, src/components/WhomSignaturesSection.vue, netlify/functions/catalog.js
+**Result:** `/collections` now lists all collections with dynamic counts + search/sort/filter; catalog auto-tags FAITH/PURPOSE/IDENTITY from product names.
+
+### [Jan 25, 2026] - Return Policy Page
+**Status:** SUCCESS ✅
+**Commit:** Pending
+**Files:** src/views/ReturnPolicyView.vue, src/router/index.js, src/components/Footer.vue
+**Result:** Added `/return-policy` page for Merchant Center; defects-only returns and no exchanges (defect replacements only).
+

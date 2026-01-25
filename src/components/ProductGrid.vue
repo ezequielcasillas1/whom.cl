@@ -2,7 +2,7 @@
   <section id="shop" class="py-32 bg-deep-black">
     <div class="max-w-7xl mx-auto px-6">
       <!-- About Section -->
-      <div class="mb-32 text-center max-w-4xl mx-auto">
+      <div id="about" class="mb-32 text-center max-w-4xl mx-auto scroll-mt-24">
         <div class="text-xs tracking-widest mb-8 text-gray-500">/ WHO ARE WE?</div>
         <p class="text-2xl md:text-3xl text-gray-200 leading-relaxed tracking-wide mb-12">
           OUR DESIGNS ARE INSPIRED BY SCRIPTURE AND MODERN FAITH,
@@ -53,7 +53,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import ProductCard from './ProductCard.vue'
-import { fetchProducts } from '../services/shopify'
+import { fetchCatalog } from '../services/catalog'
 
 const products = ref([])
 const loading = ref(true)
@@ -117,11 +117,11 @@ const loadProducts = async () => {
   error.value = null
   
   try {
-    const shopifyProducts = await fetchProducts(null, 12)
-    products.value = shopifyProducts
+    const { products: catalogProducts } = await fetchCatalog()
+    products.value = catalogProducts || []
   } catch (err) {
     console.error('Failed to load products:', err)
-    error.value = 'Unable to load products from Shopify'
+    error.value = 'Unable to load products'
     products.value = sampleProducts
   } finally {
     loading.value = false
