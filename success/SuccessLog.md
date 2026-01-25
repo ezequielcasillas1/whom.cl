@@ -50,7 +50,7 @@
 
 ### [Jan 25, 2026] - Product Variant Image Switch (Color)
 **Status:** SUCCESS ✅
-**Commit:** (pending)
+**Commit:** 9d204c1
 **Files:** src/views/ProductView.vue, src/services/productImages.js
 **Result:** Product image updates to match selected color using local WHM mockups (fallbacks to variant/thumbnail when unavailable).
 
