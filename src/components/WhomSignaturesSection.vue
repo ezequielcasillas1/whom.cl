@@ -200,10 +200,14 @@ function sortProducts(list, sortKey) {
 const whomProducts = computed(() => {
   const list = props.catalogProducts || products.value || []
   const base = list.filter(p => {
+    const title = String(p?.title || '').toUpperCase()
+    const isJohn326 =
+      /\b(JOHN\s*3\s*:\s*26|JOHN\s*3\s*26|JOHN3\s*:\s*26|JOHN326|3\s*:\s*26|3\s*26)\b/.test(title)
+    if (isJohn326) return false
+
     const tags = (p?.tags || []).map(t => String(t ?? '').trim().toUpperCase()).filter(Boolean)
     if (tags.includes('WHOM SIGNATURES')) return true
 
-    const title = String(p?.title || '').toUpperCase()
     // Fallback inference: keep signatures visible even if tags are missing/misaligned
     if (title.startsWith('WHM-') || title.startsWith('WHM ')) return true
     if (/\bJOHN\s*8\b/.test(title) || /\bJOHN8\b/.test(title)) return true

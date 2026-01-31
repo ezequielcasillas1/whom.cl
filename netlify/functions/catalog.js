@@ -141,6 +141,11 @@ function tagsForProductName(name) {
   const up = n.toUpperCase()
   const tags = []
 
+  // Exclusions: keep certain WHM verse items out of WHOM SIGNATURES
+  // (e.g., WHM- John 3:26 should not appear in WHOM SIGNATURES collections)
+  const isJohn326 =
+    /\b(JOHN\s*3\s*:\s*26|JOHN\s*3\s*26|JOHN3\s*:\s*26|JOHN326|3\s*:\s*26|3\s*26)\b/.test(up)
+
   // Core collections by naming convention / keyword
   const keywordTags = [
     { tag: 'FAITH', re: /\bFAITH\b/ },
@@ -160,7 +165,7 @@ function tagsForProductName(name) {
   }
 
   // WHM signatures collection by naming convention
-  if (up.startsWith('WHM-') || up.startsWith('WHM ')) {
+  if (!isJohn326 && (up.startsWith('WHM-') || up.startsWith('WHM '))) {
     tags.push('WHOM SIGNATURES')
   }
 
