@@ -80,4 +80,9 @@
 **Files:** netlify/functions/catalog.js, src/components/WhomSignaturesSection.vue, src/views/CollectionsView.vue, src/components/CollectionsShowcase.vue
 **Result:** Excluded `WHM John 3:26` items from WHOM SIGNATURES inference/tagging across the site. Commit: b44bf12
 
+### [Jan 31, 2026] - Exclude WHM John 3:16 from WHOM SIGNATURES
+**Status:** SUCCESS ✅
+**Files:** netlify/functions/catalog.js, src/components/WhomSignaturesSection.vue, src/views/CollectionsView.vue, src/components/CollectionsShowcase.vue
+**Result:** Excluded `WHM John 3:16 / WHM- 3:16` items from WHOM SIGNATURES; reserved them for IDENTITY. Commit: 581698f
+
 

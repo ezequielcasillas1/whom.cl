@@ -96,3 +96,9 @@
 **Files:** netlify/functions/catalog.js, src/components/WhomSignaturesSection.vue, src/views/CollectionsView.vue, src/components/CollectionsShowcase.vue
 **Result:** Prevented `WHM John 3:26` items from being inferred/tagged as WHOM SIGNATURES across home + collections.
 
+### [Jan 31, 2026] - Exclude WHM John 3:16 from WHOM SIGNATURES
+**Status:** SUCCESS ✅
+**Commit:** 581698f
+**Files:** netlify/functions/catalog.js, src/components/WhomSignaturesSection.vue, src/views/CollectionsView.vue, src/components/CollectionsShowcase.vue
+**Result:** Prevented `WHM John 3:16 / WHM- 3:16` items from appearing in WHOM SIGNATURES; keeps them in IDENTITY only.
+
