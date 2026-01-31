@@ -65,4 +65,9 @@
 **Files:** netlify/functions/catalog.js, src/services/productImages.js
 **Result:** Forced 416509679/416509583 into IDENTITY, normalized Color to Black, added minimal descriptions, and fixed tee vs sweatshirt mockup mapping.
 
+### [Jan 31, 2026] - Home Collections Product Previews
+**Status:** SUCCESS ✅
+**Files:** src/components/CollectionsShowcase.vue
+**Result:** Home page collections now render live product previews (Identity + WHOM Signatures included) instead of empty placeholders. Commit: e17c9d4
+
 
