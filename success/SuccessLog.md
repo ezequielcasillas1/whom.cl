@@ -84,3 +84,9 @@
 **Files:** src/components/CollectionsShowcase.vue
 **Result:** Home page collection blocks now show live product previews (including IDENTITY + WHOM SIGNATURES) instead of empty placeholders.
 
+### [Jan 31, 2026] - Featured Pagination (4/page)
+**Status:** SUCCESS ✅
+**Commit:** 64ef436
+**Files:** src/components/ProductGrid.vue, src/services/catalog.js, netlify/functions/catalog.js
+**Result:** Home “FEATURED PIECES” uses true API pagination (limit/offset) with Prev/Next, 4 products per page.
+
