@@ -62,23 +62,31 @@
         />
       </div>
 
-      <div v-if="displayProducts.length > 3" class="text-xs tracking-widest uppercase text-gray-600 flex items-center justify-between gap-6 mb-10">
-        <span>Showing {{ visibleFeatured.length }} of {{ displayProducts.length }}</span>
-        <span v-if="loadingMore">Loading more…</span>
-      </div>
-
-      <div v-if="hasMore" ref="sentinelEl" class="h-10"></div>
-      <div v-else-if="displayProducts.length > 3" class="h-2"></div>
-
-      <div v-if="hasMore && !supportsObserver" class="mt-6">
-        <button
-          type="button"
-          @click="loadMore"
-          class="px-6 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs"
-          aria-label="Load more products"
-        >
-          Load more
-        </button>
+      <!-- Pagination -->
+      <div v-if="totalPages > 1" class="flex flex-wrap items-center justify-between gap-6 mb-10">
+        <div class="text-xs tracking-widest uppercase text-gray-600">
+          Page {{ page }} of {{ totalPages }}
+        </div>
+        <div class="flex items-center gap-3">
+          <button
+            type="button"
+            @click="prevPage"
+            :disabled="page <= 1 || paging"
+            class="px-6 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Previous page"
+          >
+            Prev
+          </button>
+          <button
+            type="button"
+            @click="nextPage"
+            :disabled="page >= totalPages || paging"
+            class="px-6 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Next page"
+          >
+            Next
+          </button>
+        </div>
       </div>
       
       <!-- Call to Action -->
@@ -92,14 +100,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import ProductCard from './ProductCard.vue'
 import { fetchCatalog } from '../services/catalog'
-import { useInfiniteScrollPagination } from '../composables/useInfiniteScrollPagination'
 
-const products = ref([])
+const PAGE_SIZE = 4
+
+const products = ref([]) // current page (server mode) or full sample list (fallback)
+const serverTotal = ref(0)
 const loading = ref(true)
 const error = ref(null)
+const paging = ref(false)
+const page = ref(1)
+const useFallback = ref(false)
 
 // Sample fallback products
 const sampleProducts = [
@@ -153,43 +166,90 @@ const sampleProducts = [
   }
 ]
 
-// Load products from Shopify
-const loadProducts = async () => {
-  loading.value = true
+function clampPage(p) {
+  const n = Number.parseInt(String(p ?? ''), 10)
+  return Number.isFinite(n) && n > 0 ? n : 1
+}
+
+const total = computed(() => {
+  return useFallback.value ? sampleProducts.length : serverTotal.value
+})
+
+const totalPages = computed(() => {
+  const t = total.value
+  return t > 0 ? Math.ceil(t / PAGE_SIZE) : 1
+})
+
+const visibleFeatured = computed(() => {
+  if (useFallback.value) {
+    const start = (page.value - 1) * PAGE_SIZE
+    return sampleProducts.slice(start, start + PAGE_SIZE)
+  }
+  return products.value || []
+})
+
+async function loadPage(p) {
+  const target = clampPage(p)
+
+  // Local pagination for fallback mode
+  if (useFallback.value) {
+    page.value = Math.min(target, totalPages.value)
+    return
+  }
+
+  const offset = (target - 1) * PAGE_SIZE
+  paging.value = true
   error.value = null
-  
   try {
-    const { products: catalogProducts } = await fetchCatalog()
-    products.value = catalogProducts || []
+    const payload = await fetchCatalog({ limit: PAGE_SIZE, offset })
+    products.value = payload?.products || []
+    serverTotal.value = Number.parseInt(String(payload?.meta?.filtered_total ?? payload?.meta?.returned ?? '0'), 10) || 0
+
+    // If user paged past end (e.g., catalog shrank), snap back.
+    const maxPage = totalPages.value
+    page.value = Math.min(target, maxPage)
+    if (products.value.length === 0 && page.value > 1) {
+      await loadPage(page.value - 1)
+      return
+    }
   } catch (err) {
     console.error('Failed to load products:', err)
     error.value = 'Unable to load products'
-    products.value = sampleProducts
+    useFallback.value = true
+    page.value = 1
+  } finally {
+    paging.value = false
+  }
+}
+
+const nextPage = () => loadPage(page.value + 1)
+const prevPage = () => loadPage(page.value - 1)
+
+// Initial load (page 1)
+const loadInitial = async () => {
+  loading.value = true
+  error.value = null
+  useFallback.value = false
+  serverTotal.value = 0
+  products.value = []
+  page.value = 1
+
+  try {
+    const payload = await fetchCatalog({ limit: PAGE_SIZE, offset: 0 })
+    products.value = payload?.products || []
+    serverTotal.value = Number.parseInt(String(payload?.meta?.filtered_total ?? payload?.meta?.returned ?? '0'), 10) || 0
+  } catch (err) {
+    console.error('Failed to load products:', err)
+    error.value = 'Unable to load products'
+    useFallback.value = true
   } finally {
     loading.value = false
   }
 }
 
-// Display products (Shopify or fallback)
-const displayProducts = computed(() => {
-  return products.value.length > 0 ? products.value : sampleProducts
-})
-
-const {
-  visibleItems: visibleFeatured,
-  hasMore,
-  loadingMore,
-  sentinelEl,
-  supportsObserver,
-  reset,
-  loadMore
-} = useInfiniteScrollPagination(displayProducts, { batchSize: 3 })
-
 onMounted(() => {
-  loadProducts()
+  loadInitial()
 })
-
-watch(displayProducts, () => reset())
 </script>
 
 

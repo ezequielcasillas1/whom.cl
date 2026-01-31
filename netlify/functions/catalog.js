@@ -7,6 +7,8 @@ let cache = {
 }
 
 const CACHE_MS = 60_000
+const MAX_LIMIT = 50
+const DEFAULT_LIMIT = 20
 
 const CUSTOM_PRODUCT_DESCRIPTIONS_BY_ID = new Map([
   [
@@ -105,6 +107,16 @@ function extractVariantImageUrl(v) {
 
 function getQueryParams(event) {
   return event?.queryStringParameters || {}
+}
+
+function toInt(v) {
+  const n = Number.parseInt(String(v ?? ''), 10)
+  return Number.isFinite(n) ? n : null
+}
+
+function clampInt(n, min, max) {
+  if (!Number.isFinite(n)) return min
+  return Math.min(max, Math.max(min, n))
 }
 
 function normalizeTag(tag) {
@@ -256,6 +268,11 @@ export async function handler(event) {
   try {
     const qp = getQueryParams(event)
     const q = String(qp?.q || '').trim()
+    const rawLimit = toInt(qp?.limit)
+    const rawOffset = toInt(qp?.offset)
+    const hasPaging = rawLimit !== null || rawOffset !== null
+    const limit = hasPaging ? clampInt(rawLimit ?? DEFAULT_LIMIT, 1, MAX_LIMIT) : null
+    const offset = hasPaging ? clampInt(rawOffset ?? 0, 0, Number.MAX_SAFE_INTEGER) : null
 
     let normalized = cache.products
     if (!normalized || Date.now() - cache.ts >= CACHE_MS) {
@@ -270,16 +287,23 @@ export async function handler(event) {
       cache = { ts: Date.now(), products: normalized }
     }
 
-    const filtered = q
+    const filteredAll = q
       ? normalized.filter(p => String(p?.title || '').toUpperCase().includes(q.toUpperCase()))
       : normalized
+
+    const filtered = hasPaging
+      ? filteredAll.slice(offset, offset + limit)
+      : filteredAll
 
     const payload = {
       meta: {
         store_id: process.env.PRINTFUL_STORE_ID || null,
         total: normalized.length,
+        filtered_total: filteredAll.length,
         returned: filtered.length,
-        q: q || null
+        q: q || null,
+        limit,
+        offset
       },
       products: filtered
     }
