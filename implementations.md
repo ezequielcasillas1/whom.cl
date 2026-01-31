@@ -60,4 +60,9 @@
 **Files:** src/services/productImages.js, WHM-ASSETS/Product Id/WHMIDEN-SHIRTS/*, src/views/PrivacyPolicyView.vue, src/views/ShippingPolicyView.vue, src/views/TermsOfSaleView.vue, src/router/index.js, src/components/Footer.vue, netlify/functions/google-product-feed.js
 **Result:** Added Identity mockup overrides for 416509679/416509583, added privacy/shipping/terms policy pages, and included product_type in the Google product feed.
 
+### [Jan 31, 2026] - Identity J316 Tags + Black Variants
+**Status:** SUCCESS ✅
+**Files:** netlify/functions/catalog.js, src/services/productImages.js
+**Result:** Forced 416509679/416509583 into IDENTITY, normalized Color to Black, added minimal descriptions, and fixed tee vs sweatshirt mockup mapping.
+
 
