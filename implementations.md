@@ -50,4 +50,14 @@
 **Files:** src/views/ProductView.vue, src/services/productImages.js
 **Result:** Product image now updates to the correct color mockup when users change the Color option (with safe fallback when a variant match is missing).
 
+### [Jan 25, 2026] - Google Product Feed Domain Fix
+**Status:** SUCCESS ✅
+**Files:** netlify/functions/google-product-feed.js
+**Result:** Added GOOGLE_FEED_SITE_URL override to ensure correct canonical domain in feed URLs, fixing Google Merchant Center "domain problem" error.
+
+### [Jan 31, 2026] - Merchant Center Policies + Identity Mockups
+**Status:** SUCCESS ✅
+**Files:** src/services/productImages.js, WHM-ASSETS/Product Id/WHMIDEN-SHIRTS/*, src/views/PrivacyPolicyView.vue, src/views/ShippingPolicyView.vue, src/views/TermsOfSaleView.vue, src/router/index.js, src/components/Footer.vue, netlify/functions/google-product-feed.js
+**Result:** Added Identity mockup overrides for 416509679/416509583, added privacy/shipping/terms policy pages, and included product_type in the Google product feed.
+
 

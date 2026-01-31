@@ -60,3 +60,15 @@
 **Files:** src/components/ProductGrid.vue, netlify/functions/catalog.js
 **Result:** About section redesigned with minimal→grand graphic design focus (3 pillars: TYPE/MARK/WORD). Added custom WHOM-style description for product 415695270 (ember-toned Christ portrait, halo-lines, controlled drip finish).
 
+### [Jan 25, 2026] - Google Product Feed Domain Fix
+**Status:** SUCCESS ✅
+**Commit:** 80af24a
+**Files:** netlify/functions/google-product-feed.js
+**Result:** Added GOOGLE_FEED_SITE_URL override to fix Google Merchant Center domain error. Feed now uses canonical domain (whom.clothing) instead of dynamic Netlify host.
+
+### [Jan 31, 2026] - Merchant Center Policies + Identity Mockups
+**Status:** SUCCESS ✅
+**Commit:** 4dad9fa
+**Files:** src/services/productImages.js, WHM-ASSETS/Product Id/WHMIDEN-SHIRTS/*, src/views/PrivacyPolicyView.vue, src/views/ShippingPolicyView.vue, src/views/TermsOfSaleView.vue, src/router/index.js, src/components/Footer.vue, netlify/functions/google-product-feed.js
+**Result:** Added Identity mockup overrides for 416509679/416509583, added policy pages (privacy/shipping/terms), and added product_type to Google feed.
+
