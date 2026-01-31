@@ -12,8 +12,19 @@ const CUSTOM_PRODUCT_DESCRIPTIONS_BY_ID = new Map([
   [
     '415695270',
     'WHOM SIGNATURES. John 8:54–55. Ember-toned Christ portrait framed in radiant halo-lines with a controlled drip finish—minimal geometry, grand proclamation. Built for believers who move quiet but carry weight.'
+  ],
+  [
+    '416509679',
+    'IDENTITY. John 3:16 tee in black—clean silhouette, restrained mark, daily wear.'
+  ],
+  [
+    '416509583',
+    'IDENTITY. John 3:16 crewneck in black—minimal front statement, heavyweight comfort.'
   ]
 ])
+
+const IDENTITY_ONLY_PRODUCT_IDS = new Set(['416509679', '416509583'])
+const FORCE_BLACK_COLOR_IDS = new Set(['416509679', '416509583'])
 
 function normalizeSizeToken(raw) {
   const s = String(raw || '').trim()
@@ -136,6 +147,12 @@ function tagsForProductName(name) {
   return uniqTags(tags)
 }
 
+function tagsForProduct(id, title) {
+  const idKey = String(id ?? '').trim()
+  if (IDENTITY_ONLY_PRODUCT_IDS.has(idKey)) return ['IDENTITY']
+  return tagsForProductName(title)
+}
+
 function descriptionForProduct(id, name) {
   const idKey = String(id ?? '').trim()
   const custom = CUSTOM_PRODUCT_DESCRIPTIONS_BY_ID.get(idKey)
@@ -150,6 +167,26 @@ function descriptionForProduct(id, name) {
 
   return ''
 }
+
+function getSelectedOption(options, name) {
+  const n = String(name || '').toLowerCase()
+  return (options || []).find(o => String(o?.name || '').toLowerCase() === n) || null
+}
+
+function normalizeSelectedOptionsForBlack(productId, rawVariantName) {
+  const base = parseVariantSelectedOptions(rawVariantName)
+  const size = getSelectedOption(base, 'Size')?.value || null
+  const out = [{ name: 'Color', value: 'Black' }]
+  if (size) out.push({ name: 'Size', value: size })
+  return out
+}
+
+function normalizeVariantTitleForBlack(productId, rawVariantName) {
+  const opts = normalizeSelectedOptionsForBlack(productId, rawVariantName)
+  const size = getSelectedOption(opts, 'Size')?.value || null
+  return size ? `Black / ${size}` : 'Black'
+}
+
 function normalizeProduct(detail) {
   const p = detail?.result?.sync_product
   const variants = detail?.result?.sync_variants || []
@@ -166,7 +203,7 @@ function normalizeProduct(detail) {
     description: descriptionForProduct(id, title),
     thumbnail: p?.thumbnail_url || null,
     // Simple UI fields that mirror Shopify-ish shape used by components today
-    tags: tagsForProductName(title),
+    tags: tagsForProduct(id, title),
     images: p?.thumbnail_url ? [{ url: p.thumbnail_url }] : [],
     priceRange: {
       minVariantPrice: {
@@ -176,14 +213,18 @@ function normalizeProduct(detail) {
     },
     variants: variants.map(v => ({
       id: String(v?.id ?? '').replace(/^#/, ''), // Printful sync_variant_id
-      title: v?.name || (v?.variant_id ? `Variant ${v.variant_id}` : 'Variant'),
+      title: FORCE_BLACK_COLOR_IDS.has(id)
+        ? normalizeVariantTitleForBlack(id, v?.name)
+        : v?.name || (v?.variant_id ? `Variant ${v.variant_id}` : 'Variant'),
       availableForSale: true,
       priceV2: {
         amount: String(v?.retail_price || '0.00'),
         currencyCode: p?.currency || process.env.PRINTFUL_CURRENCY || 'USD'
       },
       image: extractVariantImageUrl(v),
-      selectedOptions: parseVariantSelectedOptions(v?.name),
+      selectedOptions: FORCE_BLACK_COLOR_IDS.has(id)
+        ? normalizeSelectedOptionsForBlack(id, v?.name)
+        : parseVariantSelectedOptions(v?.name),
       // Needed later for shipping quotes/order creation
       printful: {
         sync_variant_id: String(v?.id ?? '').replace(/^#/, ''),

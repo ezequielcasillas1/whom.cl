@@ -72,13 +72,15 @@ const IMAGE_OVERRIDES_BY_ID = {
   // WHM- John 3:16 Tee (Identity)
   '416509679': {
     primary: whmJohn316TeeMockupA,
-    images: [whmJohn316TeeMockupA, whmJohn316TeeMockupB, whmJohn316SweatshirtMockup]
+    byColorKey: { BLACK: whmJohn316TeeMockupA },
+    images: [whmJohn316TeeMockupA, whmJohn316TeeMockupB]
   },
 
-  // WHM- 3:16 (Identity)
+  // WHM- 3:16 (Identity) - sweatshirt
   '416509583': {
-    primary: whmJohn316TeeMockupA,
-    images: [whmJohn316TeeMockupA, whmJohn316TeeMockupB, whmJohn316SweatshirtMockup]
+    primary: whmJohn316SweatshirtMockup,
+    byColorKey: { BLACK: whmJohn316SweatshirtMockup },
+    images: [whmJohn316SweatshirtMockup]
   }
 }
 
@@ -109,12 +111,14 @@ function getOverrideByTitle(title) {
     if (k.includes('SWEATSHIRT') || (k.includes('CREW') && k.includes('NECK'))) {
       return {
         primary: whmJohn316SweatshirtMockup,
+        byColorKey: { BLACK: whmJohn316SweatshirtMockup },
         images: [whmJohn316SweatshirtMockup]
       }
     }
     return {
       primary: whmJohn316TeeMockupA,
-      images: [whmJohn316TeeMockupA, whmJohn316TeeMockupB, whmJohn316SweatshirtMockup]
+      byColorKey: { BLACK: whmJohn316TeeMockupA },
+      images: [whmJohn316TeeMockupA, whmJohn316TeeMockupB]
     }
   }
   return null
