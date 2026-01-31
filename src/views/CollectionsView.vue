@@ -285,11 +285,13 @@ function inferredTags(p) {
 
   const isJohn326 =
     /\b(JOHN\s*3\s*:\s*26|JOHN\s*3\s*26|JOHN3\s*:\s*26|JOHN326|3\s*:\s*26|3\s*26)\b/.test(title)
+  const isJohn316 =
+    /\b(JOHN\s*3\s*:\s*16|JOHN\s*3\s*16|JOHN3\s*:\s*16|JOHN316|3\s*:\s*16|3\s*16)\b/.test(title)
 
   if (!set.has('FAITH') && /\bFAITH\b/.test(title)) set.add('FAITH')
   if (!set.has('PURPOSE') && /\bPURPOSE\b/.test(title)) set.add('PURPOSE')
   if (!set.has('IDENTITY') && /\bIDENTITY\b/.test(title)) set.add('IDENTITY')
-  if (!isJohn326 && !set.has('WHOM SIGNATURES') && (title.startsWith('WHM-') || title.startsWith('WHM '))) set.add('WHOM SIGNATURES')
+  if (!isJohn326 && !isJohn316 && !set.has('WHOM SIGNATURES') && (title.startsWith('WHM-') || title.startsWith('WHM '))) set.add('WHOM SIGNATURES')
 
   return [...set]
 }

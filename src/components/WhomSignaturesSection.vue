@@ -203,7 +203,9 @@ const whomProducts = computed(() => {
     const title = String(p?.title || '').toUpperCase()
     const isJohn326 =
       /\b(JOHN\s*3\s*:\s*26|JOHN\s*3\s*26|JOHN3\s*:\s*26|JOHN326|3\s*:\s*26|3\s*26)\b/.test(title)
-    if (isJohn326) return false
+    const isJohn316 =
+      /\b(JOHN\s*3\s*:\s*16|JOHN\s*3\s*16|JOHN3\s*:\s*16|JOHN316|3\s*:\s*16|3\s*16)\b/.test(title)
+    if (isJohn326 || isJohn316) return false
 
     const tags = (p?.tags || []).map(t => String(t ?? '').trim().toUpperCase()).filter(Boolean)
     if (tags.includes('WHOM SIGNATURES')) return true

@@ -145,6 +145,8 @@ function tagsForProductName(name) {
   // (e.g., WHM- John 3:26 should not appear in WHOM SIGNATURES collections)
   const isJohn326 =
     /\b(JOHN\s*3\s*:\s*26|JOHN\s*3\s*26|JOHN3\s*:\s*26|JOHN326|3\s*:\s*26|3\s*26)\b/.test(up)
+  const isJohn316 =
+    /\b(JOHN\s*3\s*:\s*16|JOHN\s*3\s*16|JOHN3\s*:\s*16|JOHN316|3\s*:\s*16|3\s*16)\b/.test(up)
 
   // Core collections by naming convention / keyword
   const keywordTags = [
@@ -165,7 +167,7 @@ function tagsForProductName(name) {
   }
 
   // WHM signatures collection by naming convention
-  if (!isJohn326 && (up.startsWith('WHM-') || up.startsWith('WHM '))) {
+  if (!isJohn326 && !isJohn316 && (up.startsWith('WHM-') || up.startsWith('WHM '))) {
     tags.push('WHOM SIGNATURES')
   }
 
