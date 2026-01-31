@@ -136,11 +136,34 @@
             </div>
             <div v-else class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               <ProductCard
-                v-for="(product, index) in c.filteredProducts"
+                v-for="(product, index) in visibleProductsFor(c)"
                 :key="product.id"
                 :product="product"
                 :index="index"
               />
+            </div>
+
+            <div v-if="c.filteredProducts.length > batchSize" class="text-xs tracking-widest uppercase text-gray-600 flex items-center justify-between gap-6 mt-10">
+              <span>Showing {{ visibleProductsFor(c).length }} of {{ c.filteredProducts.length }}</span>
+              <span v-if="loadingMoreByKey[c.key]">Loading more…</span>
+            </div>
+
+            <div
+              v-if="hasMoreFor(c)"
+              :ref="el => setSentinelEl(c.key, el)"
+              class="h-10"
+            ></div>
+            <div v-else-if="c.filteredProducts.length > batchSize" class="h-2"></div>
+
+            <div v-if="hasMoreFor(c) && !supportsObserver" class="mt-6">
+              <button
+                type="button"
+                @click="loadMoreFor(c)"
+                class="px-6 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs"
+                :aria-label="`Load more ${c.title} products`"
+              >
+                Load more
+              </button>
             </div>
           </section>
 
@@ -157,7 +180,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchCatalog } from '../services/catalog'
 import ProductCard from '../components/ProductCard.vue'
@@ -173,6 +196,15 @@ const searchText = ref('')
 const hideEmptyCollections = ref(false)
 const collectionSortKey = ref('featured')
 const productSortKey = ref('default')
+
+const batchSize = 3
+const supportsObserver =
+  typeof window !== 'undefined' && typeof IntersectionObserver !== 'undefined'
+
+const limitByKey = reactive({})
+const loadingMoreByKey = reactive({})
+const sentinelByKey = new Map()
+let observer = null
 
 const COLLECTIONS = [
   {
@@ -355,6 +387,67 @@ const nonWhomCollections = computed(() => {
     }))
 })
 
+function ensureKeyInit(key) {
+  const k = String(key || '').toUpperCase()
+  if (!k) return
+  if (typeof limitByKey[k] !== 'number') limitByKey[k] = batchSize
+  if (typeof loadingMoreByKey[k] !== 'boolean') loadingMoreByKey[k] = false
+}
+
+function visibleProductsFor(c) {
+  const k = String(c?.key || '').toUpperCase()
+  ensureKeyInit(k)
+  const list = c?.filteredProducts || []
+  return list.slice(0, limitByKey[k])
+}
+
+function hasMoreFor(c) {
+  const k = String(c?.key || '').toUpperCase()
+  ensureKeyInit(k)
+  const list = c?.filteredProducts || []
+  return list.length > limitByKey[k]
+}
+
+function loadMoreFor(c) {
+  const k = String(c?.key || '').toUpperCase()
+  ensureKeyInit(k)
+  const list = c?.filteredProducts || []
+  if (list.length <= limitByKey[k]) return
+  loadingMoreByKey[k] = true
+  limitByKey[k] = Math.min(list.length, limitByKey[k] + batchSize)
+  loadingMoreByKey[k] = false
+}
+
+function resetAllLimits() {
+  for (const c of nonWhomCollections.value) {
+    ensureKeyInit(c.key)
+    limitByKey[String(c.key || '').toUpperCase()] = batchSize
+  }
+}
+
+function setSentinelEl(key, el) {
+  const k = String(key || '').toUpperCase()
+  if (!k) return
+  ensureKeyInit(k)
+
+  const prev = sentinelByKey.get(k)
+  if (prev && observer) {
+    try {
+      observer.unobserve(prev)
+    } catch {
+      // noop
+    }
+  }
+  if (!el) {
+    sentinelByKey.delete(k)
+    return
+  }
+
+  sentinelByKey.set(k, el)
+  el.dataset.collectionKey = k
+  if (observer) observer.observe(el)
+}
+
 const load = async () => {
   loading.value = true
   error.value = null
@@ -377,11 +470,49 @@ function applyQuerySearch(q) {
 onMounted(() => {
   applyQuerySearch(route?.query?.q)
   load()
+
+  if (supportsObserver) {
+    observer = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (!entry?.isIntersecting) continue
+          const key = String(entry?.target?.dataset?.collectionKey || '').toUpperCase()
+          if (!key) continue
+          const c = nonWhomCollections.value.find(x => String(x?.key || '').toUpperCase() === key)
+          if (c) loadMoreFor(c)
+        }
+      },
+      { root: null, rootMargin: '600px 0px', threshold: 0 }
+    )
+    // attach to existing sentinels (if any)
+    for (const el of sentinelByKey.values()) observer.observe(el)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (observer) {
+    try {
+      observer.disconnect()
+    } catch {
+      // noop
+    }
+    observer = null
+  }
 })
 
 watch(
   () => route?.query?.q,
   q => applyQuerySearch(q)
+)
+
+watch(
+  () => [searchText.value, productSortKey.value, hideEmptyCollections.value],
+  () => resetAllLimits()
+)
+
+watch(
+  () => nonWhomCollections.value.map(c => `${c.key}:${c.filteredProducts.length}`).join('|'),
+  () => resetAllLimits()
 )
 </script>
 

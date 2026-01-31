@@ -84,11 +84,30 @@
         </div>
         <div v-else class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <ProductCard
-            v-for="(product, index) in whomProducts"
+            v-for="(product, index) in visibleWhom"
             :key="product.id"
             :product="product"
             :index="index"
           />
+        </div>
+
+        <div v-if="whomProducts.length > 3" class="text-xs tracking-widest uppercase text-gray-600 flex items-center justify-between gap-6 mt-10">
+          <span>Showing {{ visibleWhom.length }} of {{ whomProducts.length }}</span>
+          <span v-if="loadingMore">Loading more…</span>
+        </div>
+
+        <div v-if="hasMore" ref="sentinelEl" class="h-10"></div>
+        <div v-else-if="whomProducts.length > 3" class="h-2"></div>
+
+        <div v-if="hasMore && !supportsObserver" class="mt-6">
+          <button
+            type="button"
+            @click="loadMore"
+            class="px-6 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs"
+            aria-label="Load more WHOM SIGNATURES products"
+          >
+            Load more
+          </button>
         </div>
       </div>
     </div>
@@ -96,9 +115,10 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import ProductCard from './ProductCard.vue'
 import { fetchCatalog } from '../services/catalog'
+import { useInfiniteScrollPagination } from '../composables/useInfiniteScrollPagination'
 
 const loading = ref(true)
 const error = ref(null)
@@ -179,10 +199,29 @@ function sortProducts(list, sortKey) {
 
 const whomProducts = computed(() => {
   const list = props.catalogProducts || products.value || []
-  const base = list.filter(p => (p?.tags || []).some(t => String(t).toUpperCase() === 'WHOM SIGNATURES'))
+  const base = list.filter(p => {
+    const tags = (p?.tags || []).map(t => String(t ?? '').trim().toUpperCase()).filter(Boolean)
+    if (tags.includes('WHOM SIGNATURES')) return true
+
+    const title = String(p?.title || '').toUpperCase()
+    // Fallback inference: keep signatures visible even if tags are missing/misaligned
+    if (title.startsWith('WHM-') || title.startsWith('WHM ')) return true
+    if (/\bJOHN\s*8\b/.test(title) || /\bJOHN8\b/.test(title)) return true
+    return false
+  })
   const filtered = base.filter(p => matchesText(p, props.filterText))
   return sortProducts(filtered, props.sortKey)
 })
+
+const {
+  visibleItems: visibleWhom,
+  hasMore,
+  loadingMore,
+  sentinelEl,
+  supportsObserver,
+  reset,
+  loadMore
+} = useInfiniteScrollPagination(whomProducts, { batchSize: 3 })
 
 const load = async () => {
   loading.value = true
@@ -201,5 +240,10 @@ onMounted(() => {
   if (!props.catalogProducts) load()
   else loading.value = false
 })
+
+watch(
+  () => [props.filterText, props.sortKey, props.catalogProducts],
+  () => reset()
+)
 </script>
 

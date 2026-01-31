@@ -139,9 +139,25 @@ function tagsForProductName(name) {
     if (k.re.test(up)) tags.push(k.tag)
   }
 
+  // IDENTITY by verse naming convention (e.g., John 3:16 / JOHN316 / 3:16)
+  // This keeps identity items discoverable even when product names don't include the word "IDENTITY".
+  if (!tags.includes('IDENTITY')) {
+    const identityVerse =
+      /\b(JOHN\s*3\s*:\s*16|JOHN\s*3\s*16|JOHN3\s*:\s*16|JOHN316|3\s*:\s*16|3\s*16)\b/
+    if (identityVerse.test(up)) tags.push('IDENTITY')
+  }
+
   // WHM signatures collection by naming convention
   if (up.startsWith('WHM-') || up.startsWith('WHM ')) {
     tags.push('WHOM SIGNATURES')
+  }
+
+  // WHOM SIGNATURES by verse naming convention (e.g., John 8:54–55 / JOHN8)
+  // This covers items that are signatures but don't start with "WHM".
+  if (!tags.includes('WHOM SIGNATURES')) {
+    const whomVerse =
+      /\b(JOHN\s*8\s*:\s*54\s*[-–—]\s*55|JOHN\s*8\s*:\s*54\s*-\s*55|JOHN\s*8\s*:\s*54\s*55|JOHN8\s*:\s*54\s*[-–—]\s*55|JOHN8)\b/
+    if (whomVerse.test(up)) tags.push('WHOM SIGNATURES')
   }
 
   return uniqTags(tags)

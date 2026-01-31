@@ -55,11 +55,30 @@
       <!-- Products Grid -->
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
         <ProductCard 
-          v-for="(product, index) in displayProducts" 
+          v-for="(product, index) in visibleFeatured" 
           :key="product.id"
           :product="product"
           :index="index"
         />
+      </div>
+
+      <div v-if="displayProducts.length > 3" class="text-xs tracking-widest uppercase text-gray-600 flex items-center justify-between gap-6 mb-10">
+        <span>Showing {{ visibleFeatured.length }} of {{ displayProducts.length }}</span>
+        <span v-if="loadingMore">Loading more…</span>
+      </div>
+
+      <div v-if="hasMore" ref="sentinelEl" class="h-10"></div>
+      <div v-else-if="displayProducts.length > 3" class="h-2"></div>
+
+      <div v-if="hasMore && !supportsObserver" class="mt-6">
+        <button
+          type="button"
+          @click="loadMore"
+          class="px-6 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs"
+          aria-label="Load more products"
+        >
+          Load more
+        </button>
       </div>
       
       <!-- Call to Action -->
@@ -73,9 +92,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import ProductCard from './ProductCard.vue'
 import { fetchCatalog } from '../services/catalog'
+import { useInfiniteScrollPagination } from '../composables/useInfiniteScrollPagination'
 
 const products = ref([])
 const loading = ref(true)
@@ -155,9 +175,21 @@ const displayProducts = computed(() => {
   return products.value.length > 0 ? products.value : sampleProducts
 })
 
+const {
+  visibleItems: visibleFeatured,
+  hasMore,
+  loadingMore,
+  sentinelEl,
+  supportsObserver,
+  reset,
+  loadMore
+} = useInfiniteScrollPagination(displayProducts, { batchSize: 3 })
+
 onMounted(() => {
   loadProducts()
 })
+
+watch(displayProducts, () => reset())
 </script>
 
 
