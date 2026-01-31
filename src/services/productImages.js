@@ -23,6 +23,20 @@ const whmJohn8WhiteMockup = new URL(
   import.meta.url
 ).href
 
+// WHM- John 3:16 Tee (Identity) mockups (bundled in repo)
+const whmJohn316TeeMockupA = new URL(
+  '../../WHM-ASSETS/Product Id/WHMIDEN-SHIRTS/WHM-John316/cotton-heritage-mc1082-i-mens-premium-short-sleeve-tee-black-front-697e79b2693a9.png',
+  import.meta.url
+).href
+const whmJohn316TeeMockupB = new URL(
+  '../../WHM-ASSETS/Product Id/WHMIDEN-SHIRTS/WHM-John316/cotton-heritage-mc1082-i-mens-premium-short-sleeve-tee-black-front-697e79b269730.png',
+  import.meta.url
+).href
+const whmJohn316SweatshirtMockup = new URL(
+  '../../WHM-ASSETS/Product Id/WHMIDEN-SHIRTS/WHM-John316/WHMSWSHIRT-J316/classic-unisex-crew-neck-sweatshirt-black-front-697e79729ce92.png',
+  import.meta.url
+).href
+
 function normalizeKey(raw) {
   return String(raw || '')
     .trim()
@@ -53,6 +67,18 @@ const IMAGE_OVERRIDES_BY_ID = {
       whmJohn8NavyMockup,
       whmJohn8WhiteMockup
     ]
+  },
+
+  // WHM- John 3:16 Tee (Identity)
+  '416509679': {
+    primary: whmJohn316TeeMockupA,
+    images: [whmJohn316TeeMockupA, whmJohn316TeeMockupB, whmJohn316SweatshirtMockup]
+  },
+
+  // WHM- 3:16 (Identity)
+  '416509583': {
+    primary: whmJohn316TeeMockupA,
+    images: [whmJohn316TeeMockupA, whmJohn316TeeMockupB, whmJohn316SweatshirtMockup]
   }
 }
 
@@ -76,6 +102,19 @@ function getOverrideByTitle(title) {
         whmJohn8NavyMockup,
         whmJohn8WhiteMockup
       ]
+    }
+  }
+  if (k.includes('WHM') && k.includes('JOHN') && k.includes('316')) {
+    // If the title looks like a sweatshirt/crewneck, prefer the sweatshirt mockup.
+    if (k.includes('SWEATSHIRT') || (k.includes('CREW') && k.includes('NECK'))) {
+      return {
+        primary: whmJohn316SweatshirtMockup,
+        images: [whmJohn316SweatshirtMockup]
+      }
+    }
+    return {
+      primary: whmJohn316TeeMockupA,
+      images: [whmJohn316TeeMockupA, whmJohn316TeeMockupB, whmJohn316SweatshirtMockup]
     }
   }
   return null

@@ -27,13 +27,18 @@
               </a>
             </li>
             <li>
-              <a href="#terms" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+              <RouterLink to="/terms-of-sale" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
                 Terms of Sale
-              </a>
+              </RouterLink>
             </li>
             <li>
               <RouterLink to="/return-policy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
                 Return Policy
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/shipping-policy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Shipping Policy
               </RouterLink>
             </li>
             <li>
@@ -42,9 +47,9 @@
               </RouterLink>
             </li>
             <li>
-              <a href="#privacy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+              <RouterLink to="/privacy-policy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
                 Privacy Policy
-              </a>
+              </RouterLink>
             </li>
           </ul>
         </div>

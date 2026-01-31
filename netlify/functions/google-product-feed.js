@@ -88,6 +88,7 @@ function itemXml(p, origin) {
     `<g:condition>new</g:condition>`,
     `<g:price>${xmlEscape(money(p?.price?.amount, p?.price?.currencyCode))}</g:price>`,
     `<g:brand>${xmlEscape(process.env.GOOGLE_FEED_BRAND || 'WHOM')}</g:brand>`,
+    `<g:product_type>Apparel &amp; Accessories &gt; Clothing &gt; Shirts &amp; Tops</g:product_type>`,
     `<g:identifier_exists>false</g:identifier_exists>`,
     '</item>'
   ]

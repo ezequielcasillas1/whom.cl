@@ -5,6 +5,9 @@ import CollectionsView from '../views/CollectionsView.vue'
 import ReturnPolicyView from '../views/ReturnPolicyView.vue'
 import RefundsView from '../views/RefundsView.vue'
 import ProductView from '../views/ProductView.vue'
+import PrivacyPolicyView from '../views/PrivacyPolicyView.vue'
+import ShippingPolicyView from '../views/ShippingPolicyView.vue'
+import TermsOfSaleView from '../views/TermsOfSaleView.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -13,7 +16,10 @@ export const router = createRouter({
     { path: '/collections', name: 'collections', component: CollectionsView },
     { path: '/product/:id', name: 'product', component: ProductView },
     { path: '/return-policy', name: 'return-policy', component: ReturnPolicyView },
-    { path: '/refunds', name: 'refunds', component: RefundsView }
+    { path: '/refunds', name: 'refunds', component: RefundsView },
+    { path: '/privacy-policy', name: 'privacy-policy', component: PrivacyPolicyView },
+    { path: '/shipping-policy', name: 'shipping-policy', component: ShippingPolicyView },
+    { path: '/terms-of-sale', name: 'terms-of-sale', component: TermsOfSaleView }
   ],
   scrollBehavior(to) {
     if (to.hash) return { el: to.hash, behavior: 'smooth' }
