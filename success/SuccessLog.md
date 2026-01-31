@@ -90,3 +90,9 @@
 **Files:** src/components/ProductGrid.vue, src/services/catalog.js, netlify/functions/catalog.js
 **Result:** Home “FEATURED PIECES” uses true API pagination (limit/offset) with Prev/Next, 4 products per page.
 
+### [Jan 31, 2026] - Exclude WHM John 3:26 from WHOM SIGNATURES
+**Status:** SUCCESS ✅
+**Commit:** b44bf12
+**Files:** netlify/functions/catalog.js, src/components/WhomSignaturesSection.vue, src/views/CollectionsView.vue, src/components/CollectionsShowcase.vue
+**Result:** Prevented `WHM John 3:26` items from being inferred/tagged as WHOM SIGNATURES across home + collections.
+

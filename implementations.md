@@ -75,4 +75,9 @@
 **Files:** src/components/ProductGrid.vue, src/services/catalog.js, netlify/functions/catalog.js
 **Result:** Implemented true pagination for Home “FEATURED PIECES” (4 per page) using `/api/catalog?limit&offset`. Commit: 64ef436
 
+### [Jan 31, 2026] - Exclude WHM John 3:26 from WHOM SIGNATURES
+**Status:** SUCCESS ✅
+**Files:** netlify/functions/catalog.js, src/components/WhomSignaturesSection.vue, src/views/CollectionsView.vue, src/components/CollectionsShowcase.vue
+**Result:** Excluded `WHM John 3:26` items from WHOM SIGNATURES inference/tagging across the site. Commit: b44bf12
+
 
