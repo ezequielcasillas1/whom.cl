@@ -20,14 +20,15 @@ Cursor's git integration is holding an exclusive lock on `.git/index.lock`, prev
 ### Option 3: Manual Terminal Commands (After Closing Cursor)
 ```bash
 git add -A
-git commit -m "✅ SUCCESS: Add WhomIfastfor prayer journal page with QR code"
+git commit -m "✅ SUCCESS: Add Christian Journals section and pages"
 git push origin master
 ```
 
 ## Files to Commit
-- `src/views/WhomIfastforView.vue` (new)
-- `src/router/index.js` (modified)
-- `public/qr-whom-ifastfor.png` (new)
-- `scripts/generate-qr-api.js` (new)
-- `scripts/generate-qr.js` (new)
+- `src/components/Footer.vue` (modified - added Christian Journals section)
+- `src/views/ChristianJournalsView.vue` (new - main journals page)
+- `src/views/WhomIStudyforView.vue` (new - Bible study journal page)
+- `src/views/WhomThyProfessionCallsforView.vue` (new - professional journal page)
+- `src/views/WhomIfastforView.vue` (modified - added back link)
+- `src/router/index.js` (modified - added 3 new routes)
 - Plus other modified files from previous work

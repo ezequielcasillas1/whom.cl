@@ -9,6 +9,9 @@ import PrivacyPolicyView from '../views/PrivacyPolicyView.vue'
 import ShippingPolicyView from '../views/ShippingPolicyView.vue'
 import TermsOfSaleView from '../views/TermsOfSaleView.vue'
 import WhomIfastforView from '../views/WhomIfastforView.vue'
+import ChristianJournalsView from '../views/ChristianJournalsView.vue'
+import WhomIStudyforView from '../views/WhomIStudyforView.vue'
+import WhomThyProfessionCallsforView from '../views/WhomThyProfessionCallsforView.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -21,7 +24,10 @@ export const router = createRouter({
     { path: '/privacy-policy', name: 'privacy-policy', component: PrivacyPolicyView },
     { path: '/shipping-policy', name: 'shipping-policy', component: ShippingPolicyView },
     { path: '/terms-of-sale', name: 'terms-of-sale', component: TermsOfSaleView },
-    { path: '/WhomIfastfor', name: 'whom-ifastfor', component: WhomIfastforView }
+    { path: '/christian-journals', name: 'christian-journals', component: ChristianJournalsView },
+    { path: '/WhomIfastfor', name: 'whom-ifastfor', component: WhomIfastforView },
+    { path: '/WhomIStudyfor', name: 'whom-studyfor', component: WhomIStudyforView },
+    { path: '/WhomThyProfessionCallsfor', name: 'whom-profession', component: WhomThyProfessionCallsforView }
   ],
   scrollBehavior(to) {
     if (to.hash) return { el: to.hash, behavior: 'smooth' }

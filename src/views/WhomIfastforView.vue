@@ -87,7 +87,9 @@
         </div>
 
         <div class="text-xs text-gray-500 tracking-wide leading-relaxed text-center pt-8">
-          Start your fasting journey today. Write it down. Pray it through. Watch God move.
+          <RouterLink to="/christian-journals" class="hover:text-white transition-colors underline underline-offset-4">
+            ← Back to Christian Journals
+          </RouterLink>
         </div>
       </div>
     </section>
@@ -95,4 +97,5 @@
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router'
 </script>

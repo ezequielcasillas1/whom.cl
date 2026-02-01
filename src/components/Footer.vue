@@ -2,7 +2,7 @@
   <footer class="bg-black border-t border-stone-gray">
     <!-- Main Footer Content -->
     <div class="max-w-7xl mx-auto px-6 py-20">
-      <div class="grid md:grid-cols-3 gap-16 mb-16">
+      <div class="grid md:grid-cols-4 gap-16 mb-16">
         <!-- Brand Section -->
         <div>
           <h3 class="text-2xl font-black mb-6 editorial-spacing">
@@ -49,6 +49,35 @@
             <li>
               <RouterLink to="/privacy-policy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
                 Privacy Policy
+              </RouterLink>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Christian Journals -->
+        <div>
+          <h4 class="text-xs tracking-widest uppercase mb-6 text-gray-500">
+            CHRISTIAN JOURNALS
+          </h4>
+          <ul class="space-y-3 text-sm">
+            <li>
+              <RouterLink to="/christian-journals" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Christian Journals
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/WhomIfastfor" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Whom I Fast For
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/WhomIStudyfor" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Whom I Study For
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/WhomThyProfessionCallsfor" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Whom Thy Profession Calls For
               </RouterLink>
             </li>
           </ul>
