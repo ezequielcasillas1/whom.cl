@@ -229,7 +229,7 @@ const COLLECTIONS = [
     id: 'whom-signatures',
     key: 'WHOM SIGNATURES',
     title: 'WHOM SIGNATURES',
-    description: 'Scripture-indexed marks. Minimal statements built from the “whom” thread.'
+    description: 'Scripture-indexed marks. Maximal statements built from the “whom” thread.'
   }
 ]
 
@@ -265,7 +265,7 @@ const sampleProducts = [
   {
     id: 'sample-4',
     title: 'WHM- JOHN 8:54-55',
-    description: 'WHOM SIGNATURES. John 8:54–55. Minimal mark, eternal meaning.',
+    description: 'WHOM SIGNATURES. John 8:54–55. Maximal mark, eternal meaning.',
     priceRange: { minVariantPrice: { amount: '49.00', currencyCode: 'USD' } },
     handle: 'whm-john-8-54-55',
     tags: ['WHOM SIGNATURES'],

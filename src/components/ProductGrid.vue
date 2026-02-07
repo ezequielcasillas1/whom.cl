@@ -5,10 +5,10 @@
       <div id="about" class="mb-32 max-w-5xl mx-auto scroll-mt-24">
         <div class="text-xs tracking-widest mb-4 text-gray-500 uppercase">/ About</div>
         <h2 class="text-4xl md:text-6xl font-black editorial-spacing mb-6">
-          MINIMAL → GRAND_
+          MAXIMAL → GRAND_
         </h2>
         <p class="text-sm md:text-base text-gray-300 leading-relaxed tracking-wide max-w-3xl">
-          WHOM.CLOTHING is scripture-first graphic design: disciplined minimalism, editorial spacing, and bold marks
+          WHOM.CLOTHING is scripture-first graphic design: disciplined maximalism, editorial spacing, and bold marks
           that scale from quiet detail to statement piece.
         </p>
 
@@ -22,7 +22,7 @@
           <div class="border border-stone-gray bg-black/30 p-5">
             <div class="text-[11px] tracking-widest uppercase text-gray-500 mb-2">02 / MARK</div>
             <div class="text-sm text-gray-200 tracking-wide leading-relaxed">
-              Minimal geometry—built to read from a distance.
+              Maximal geometry—built to read from a distance.
             </div>
           </div>
           <div class="border border-stone-gray bg-black/30 p-5">

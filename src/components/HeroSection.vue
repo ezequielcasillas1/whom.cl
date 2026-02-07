@@ -17,7 +17,7 @@
         <p class="text-lg md:text-xl text-gray-300 tracking-wide leading-relaxed uppercase">
           Modern apparel designed for believers who walk with purpose.
           <br />
-          Intentional. Minimal. Bold.
+          Intentional. Maximal. Bold.
         </p>
       </div>
       

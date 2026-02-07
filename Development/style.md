@@ -1,6 +1,6 @@
 WEBSITE STYLE GUIDE — GENERATION PROMPT
 
-Design a modern, high-end fashion e-commerce website with a minimalist, editorial, and futuristic aesthetic.
+Design a modern, high-end fashion e-commerce website with a maximalist, editorial, and futuristic aesthetic.
 
 Overall Mood & Tone
 
@@ -20,7 +20,7 @@ Secondary: Soft concrete gray, cool stone textures
 
 Text: Pure white and muted off-white
 
-Accents: Extremely minimal, monochrome only
+Accents: Maximal monochrome presence
 
 No bright colors, no gradients
 
@@ -38,7 +38,7 @@ Large bold headlines
 
 Smaller, spaced navigation text
 
-Minimal labels like /001, /002
+Maximal labels like /001, /002
 
 Typography should feel architectural, not playful
 
@@ -72,7 +72,7 @@ Images feel cold, controlled, and deliberate
 
 UI Elements
 
-Minimal navigation (small, understated)
+Maximal navigation presence
 
 Text-first design, images support—not dominate
 
@@ -124,5 +124,5 @@ Crowded product grids
 
 SHORT VERSION (if tool needs brevity)
 
-Minimal black fashion e-commerce website, editorial techwear aesthetic, brutalist architecture inspiration, uppercase sans-serif typography, high contrast imagery, gallery-style layout, subtle numbering system, dark luxury mood, text-driven design, premium restraint.
+Maximal black fashion e-commerce website, editorial techwear aesthetic, brutalist architecture inspiration, uppercase sans-serif typography, high contrast imagery, gallery-style layout, bold numbering system, dark luxury mood, text-driven design, premium presence.
 

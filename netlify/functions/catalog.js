@@ -13,7 +13,7 @@ const DEFAULT_LIMIT = 20
 const CUSTOM_PRODUCT_DESCRIPTIONS_BY_ID = new Map([
   [
     '415695270',
-    'WHOM SIGNATURES. John 8:54–55. Ember-toned Christ portrait framed in radiant halo-lines with a controlled drip finish—minimal geometry, grand proclamation. Built for believers who move quiet but carry weight.'
+    'WHOM SIGNATURES. John 8:54–55. Ember-toned Christ portrait framed in radiant halo-lines with a controlled drip finish—maximal geometry, grand proclamation. Built for believers who move quiet but carry weight.'
   ],
   [
     '416509679',
@@ -21,7 +21,7 @@ const CUSTOM_PRODUCT_DESCRIPTIONS_BY_ID = new Map([
   ],
   [
     '416509583',
-    'IDENTITY. John 3:16 crewneck in black—minimal front statement, heavyweight comfort.'
+    'IDENTITY. John 3:16 crewneck in black—maximal front statement, heavyweight comfort.'
   ]
 ])
 
@@ -197,7 +197,7 @@ function descriptionForProduct(id, name) {
   const up = n.toUpperCase()
 
   if (up === 'WHM- JOHN8:54-55' || up === 'WHM- JOHN 8:54-55') {
-    return 'WHOM SIGNATURES. John 8:54–55. Minimal mark, eternal meaning.'
+    return 'WHOM SIGNATURES. John 8:54–55. Maximal mark, eternal meaning.'
   }
 
   return ''

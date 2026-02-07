@@ -4,7 +4,7 @@ Modern Christian apparel website built with Vue.js and Tailwind CSS.
 
 ## Features
 
-- Minimal, editorial design inspired by high-end techwear fashion
+- Maximal, editorial design inspired by high-end techwear fashion
 - Christian-themed collections (FAITH, PURPOSE, IDENTITY)
 - Responsive design with dark aesthetic
 - Modern Vue.js 3 Composition API
@@ -28,7 +28,7 @@ npm run build
 WHOM.CLOTHING merges faith and fashion with:
 - Dark, bold, intentional aesthetic
 - Scripture-based messaging
-- Minimalist, modern UI
+- Maximalist, modern UI
 - Editorial fashion photography style
 - Premium restraint and confidence
 

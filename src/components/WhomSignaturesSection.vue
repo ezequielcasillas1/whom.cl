@@ -8,7 +8,7 @@
         </h2>
         <p class="text-gray-300 tracking-wide leading-relaxed max-w-3xl">
           WHOM SIGNATURES is our scripture-indexed collection. We trace every “whom” thread
-          we can from Old Testament to New Testament—then translate that meaning into a minimal, wearable mark.
+          we can from Old Testament to New Testament—then translate that meaning into a maximal, wearable mark.
         </p>
       </div>
 
