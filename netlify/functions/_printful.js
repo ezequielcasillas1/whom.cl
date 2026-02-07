@@ -47,7 +47,23 @@ async function printfulFetch(path, init = {}) {
 
 export async function getStoreProducts() {
   // List products in your Printful store (manual order platform/API store)
-  return await printfulFetch('/store/products', { method: 'GET' })
+  const limit = 100
+  let offset = 0
+  let all = []
+
+  // Printful paginates store products; fetch all pages so new products are always included.
+  // Endpoint supports offset + limit.
+  // Docs: https://developers.printful.com/docs/#operation/getStoreProducts
+  for (;;) {
+    const page = await printfulFetch(`/store/products?offset=${offset}&limit=${limit}`, { method: 'GET' })
+    const arr = page?.result || []
+    if (!Array.isArray(arr) || arr.length === 0) break
+    all = all.concat(arr)
+    if (arr.length < limit) break
+    offset += limit
+  }
+
+  return { result: all }
 }
 
 export async function getStoreProductById(id) {

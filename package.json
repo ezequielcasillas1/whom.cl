@@ -10,7 +10,8 @@
   "dependencies": {
     "@shopify/storefront-api-client": "^1.0.9",
     "axios": "^1.13.2",
-    "vue": "^3.4.0"
+    "vue": "^3.4.0",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",

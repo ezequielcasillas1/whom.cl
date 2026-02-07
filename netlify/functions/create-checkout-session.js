@@ -50,6 +50,45 @@ function pickShipping(rates, requestedId) {
   }, arr[0])
 }
 
+function normalizeSyncVariantId(id) {
+  return String(id ?? '').trim().replace(/^#/, '')
+}
+
+function normalizeImageUrl(raw, siteUrl) {
+  const s = String(raw ?? '').trim()
+  if (!s) return null
+  // Already absolute
+  if (/^https?:\/\//i.test(s)) return s
+  // Make absolute for Stripe
+  const base = String(siteUrl || '').replace(/\/+$/, '')
+  const path = s.startsWith('/') ? s : `/${s}`
+  return `${base}${path}`
+}
+
+function resolveSiteUrl() {
+  // Netlify provides URL/DEPLOY_PRIME_URL automatically. Prefer those.
+  return (
+    process.env.URL ||
+    process.env.DEPLOY_PRIME_URL ||
+    process.env.SITE_URL ||
+    'http://localhost:3000'
+  )
+}
+
+function extractPrintfulVariantImage(result) {
+  // Prefer variant-level mockup/preview images if available.
+  const files = Array.isArray(result?.files) ? result.files : []
+  const f0 = files[0]
+  const fromFiles =
+    f0?.preview_url ||
+    f0?.thumbnail_url ||
+    f0?.url ||
+    null
+  if (fromFiles) return fromFiles
+
+  // Fallback to product image (may be design-only, but better than nothing)
+  return result?.product?.image || null
+}
 export async function handler(event) {
   if (event.httpMethod !== 'POST') return methodNotAllowed(['POST'])
 
@@ -72,13 +111,14 @@ export async function handler(event) {
 
   try {
     const currency = process.env.PRINTFUL_CURRENCY || 'USD'
+    const siteUrl = resolveSiteUrl()
 
     // Validate items server-side via Printful store variant endpoint
     const variantDetails = await Promise.all(
       items.map(async it => {
-        const syncVariantId = Number(it?.sync_variant_id ?? it?.syncVariantId ?? it?.id)
+        const syncVariantId = normalizeSyncVariantId(it?.sync_variant_id ?? it?.syncVariantId ?? it?.id)
         const quantity = Number(it?.quantity ?? 1)
-        if (!Number.isFinite(syncVariantId) || syncVariantId <= 0) {
+        if (!syncVariantId) {
           throw new Error('Invalid sync_variant_id')
         }
         if (!Number.isFinite(quantity) || quantity <= 0) {
@@ -92,7 +132,10 @@ export async function handler(event) {
           name: result?.name || 'Item',
           retail_price: result?.retail_price || '0.00',
           variant_id: result?.variant_id,
-          image: result?.product?.image || null
+          image:
+            normalizeImageUrl(it?.image, siteUrl) ||
+            normalizeImageUrl(extractPrintfulVariantImage(result), siteUrl) ||
+            null
         }
       })
     )
@@ -117,8 +160,6 @@ export async function handler(event) {
 
     const selectedShipping = pickShipping(shippingRates, body?.shipping_rate_id)
     if (!selectedShipping) return serverError('No shipping rates returned')
-
-    const siteUrl = process.env.SITE_URL || 'http://localhost:3000'
 
     const params = new URLSearchParams()
     params.set('mode', 'payment')

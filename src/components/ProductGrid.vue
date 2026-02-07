@@ -2,14 +2,36 @@
   <section id="shop" class="py-32 bg-deep-black">
     <div class="max-w-7xl mx-auto px-6">
       <!-- About Section -->
-      <div class="mb-32 text-center max-w-4xl mx-auto">
-        <div class="text-xs tracking-widest mb-8 text-gray-500">/ WHO ARE WE?</div>
-        <p class="text-2xl md:text-3xl text-gray-200 leading-relaxed tracking-wide mb-12">
-          OUR DESIGNS ARE INSPIRED BY SCRIPTURE AND MODERN FAITH,
-          COMBINED WITH A MINIMALIST, INTENTIONAL AESTHETIC. WHOM.CLOTHING
-          MERGES BELIEF AND FASHION TO CREATE APPAREL THAT SPEAKS
-          PURPOSE INTO EVERYDAY WEAR.
+      <div id="about" class="mb-32 max-w-5xl mx-auto scroll-mt-24">
+        <div class="text-xs tracking-widest mb-4 text-gray-500 uppercase">/ About</div>
+        <h2 class="text-4xl md:text-6xl font-black editorial-spacing mb-6">
+          MINIMAL → GRAND_
+        </h2>
+        <p class="text-sm md:text-base text-gray-300 leading-relaxed tracking-wide max-w-3xl">
+          WHOM.CLOTHING is scripture-first graphic design: disciplined minimalism, editorial spacing, and bold marks
+          that scale from quiet detail to statement piece.
         </p>
+
+        <div class="mt-10 grid sm:grid-cols-3 gap-4">
+          <div class="border border-stone-gray bg-black/30 p-5">
+            <div class="text-[11px] tracking-widest uppercase text-gray-500 mb-2">01 / TYPE</div>
+            <div class="text-sm text-gray-200 tracking-wide leading-relaxed">
+              Clean typography. Heavy restraint. Meaning carried by space.
+            </div>
+          </div>
+          <div class="border border-stone-gray bg-black/30 p-5">
+            <div class="text-[11px] tracking-widest uppercase text-gray-500 mb-2">02 / MARK</div>
+            <div class="text-sm text-gray-200 tracking-wide leading-relaxed">
+              Minimal geometry—built to read from a distance.
+            </div>
+          </div>
+          <div class="border border-stone-gray bg-black/30 p-5">
+            <div class="text-[11px] tracking-widest uppercase text-gray-500 mb-2">03 / WORD</div>
+            <div class="text-sm text-gray-200 tracking-wide leading-relaxed">
+              Scripture-indexed references. Faith, not aesthetic—first.
+            </div>
+          </div>
+        </div>
       </div>
       
       <!-- Featured Products -->
@@ -33,11 +55,38 @@
       <!-- Products Grid -->
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
         <ProductCard 
-          v-for="(product, index) in displayProducts" 
+          v-for="(product, index) in visibleFeatured" 
           :key="product.id"
           :product="product"
           :index="index"
         />
+      </div>
+
+      <!-- Pagination -->
+      <div v-if="totalPages > 1" class="flex flex-wrap items-center justify-between gap-6 mb-10">
+        <div class="text-xs tracking-widest uppercase text-gray-600">
+          Page {{ page }} of {{ totalPages }}
+        </div>
+        <div class="flex items-center gap-3">
+          <button
+            type="button"
+            @click="prevPage"
+            :disabled="page <= 1 || paging"
+            class="px-6 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Previous page"
+          >
+            Prev
+          </button>
+          <button
+            type="button"
+            @click="nextPage"
+            :disabled="page >= totalPages || paging"
+            class="px-6 py-3 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-wider text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Next page"
+          >
+            Next
+          </button>
+        </div>
       </div>
       
       <!-- Call to Action -->
@@ -55,9 +104,15 @@ import { ref, onMounted, computed } from 'vue'
 import ProductCard from './ProductCard.vue'
 import { fetchCatalog } from '../services/catalog'
 
-const products = ref([])
+const PAGE_SIZE = 4
+
+const products = ref([]) // current page (server mode) or full sample list (fallback)
+const serverTotal = ref(0)
 const loading = ref(true)
 const error = ref(null)
+const paging = ref(false)
+const page = ref(1)
+const useFallback = ref(false)
 
 // Sample fallback products
 const sampleProducts = [
@@ -111,30 +166,89 @@ const sampleProducts = [
   }
 ]
 
-// Load products from Shopify
-const loadProducts = async () => {
-  loading.value = true
+function clampPage(p) {
+  const n = Number.parseInt(String(p ?? ''), 10)
+  return Number.isFinite(n) && n > 0 ? n : 1
+}
+
+const total = computed(() => {
+  return useFallback.value ? sampleProducts.length : serverTotal.value
+})
+
+const totalPages = computed(() => {
+  const t = total.value
+  return t > 0 ? Math.ceil(t / PAGE_SIZE) : 1
+})
+
+const visibleFeatured = computed(() => {
+  if (useFallback.value) {
+    const start = (page.value - 1) * PAGE_SIZE
+    return sampleProducts.slice(start, start + PAGE_SIZE)
+  }
+  return products.value || []
+})
+
+async function loadPage(p) {
+  const target = clampPage(p)
+
+  // Local pagination for fallback mode
+  if (useFallback.value) {
+    page.value = Math.min(target, totalPages.value)
+    return
+  }
+
+  const offset = (target - 1) * PAGE_SIZE
+  paging.value = true
   error.value = null
-  
   try {
-    const { products: catalogProducts } = await fetchCatalog()
-    products.value = catalogProducts || []
+    const payload = await fetchCatalog({ limit: PAGE_SIZE, offset })
+    products.value = payload?.products || []
+    serverTotal.value = Number.parseInt(String(payload?.meta?.filtered_total ?? payload?.meta?.returned ?? '0'), 10) || 0
+
+    // If user paged past end (e.g., catalog shrank), snap back.
+    const maxPage = totalPages.value
+    page.value = Math.min(target, maxPage)
+    if (products.value.length === 0 && page.value > 1) {
+      await loadPage(page.value - 1)
+      return
+    }
   } catch (err) {
     console.error('Failed to load products:', err)
     error.value = 'Unable to load products'
-    products.value = sampleProducts
+    useFallback.value = true
+    page.value = 1
+  } finally {
+    paging.value = false
+  }
+}
+
+const nextPage = () => loadPage(page.value + 1)
+const prevPage = () => loadPage(page.value - 1)
+
+// Initial load (page 1)
+const loadInitial = async () => {
+  loading.value = true
+  error.value = null
+  useFallback.value = false
+  serverTotal.value = 0
+  products.value = []
+  page.value = 1
+
+  try {
+    const payload = await fetchCatalog({ limit: PAGE_SIZE, offset: 0 })
+    products.value = payload?.products || []
+    serverTotal.value = Number.parseInt(String(payload?.meta?.filtered_total ?? payload?.meta?.returned ?? '0'), 10) || 0
+  } catch (err) {
+    console.error('Failed to load products:', err)
+    error.value = 'Unable to load products'
+    useFallback.value = true
   } finally {
     loading.value = false
   }
 }
 
-// Display products (Shopify or fallback)
-const displayProducts = computed(() => {
-  return products.value.length > 0 ? products.value : sampleProducts
-})
-
 onMounted(() => {
-  loadProducts()
+  loadInitial()
 })
 </script>
 

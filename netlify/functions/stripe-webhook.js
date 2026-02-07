@@ -109,11 +109,12 @@ export async function handler(event) {
       const items = (lineItems?.data || []).map(li => {
         const product = li?.price?.product
         const md = product?.metadata || {}
+        const syncVariantId = String(md.printful_sync_variant_id ?? '').trim()
         return {
-          sync_variant_id: Number(md.printful_sync_variant_id),
+          sync_variant_id: syncVariantId,
           quantity: li.quantity || 1
         }
-      }).filter(i => Number.isFinite(i.sync_variant_id) && i.sync_variant_id > 0)
+      }).filter(i => Boolean(i.sync_variant_id))
 
       const shipping = session.shipping_details
       const addr = shipping?.address || {}

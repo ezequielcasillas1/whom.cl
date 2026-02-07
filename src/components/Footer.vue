@@ -2,7 +2,7 @@
   <footer class="bg-black border-t border-stone-gray">
     <!-- Main Footer Content -->
     <div class="max-w-7xl mx-auto px-6 py-20">
-      <div class="grid md:grid-cols-3 gap-16 mb-16">
+      <div class="grid md:grid-cols-4 gap-16 mb-16">
         <!-- Brand Section -->
         <div>
           <h3 class="text-2xl font-black mb-6 editorial-spacing">
@@ -27,19 +27,58 @@
               </a>
             </li>
             <li>
-              <a href="#terms" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+              <RouterLink to="/terms-of-sale" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
                 Terms of Sale
-              </a>
+              </RouterLink>
             </li>
             <li>
-              <a href="#shipping" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
-                Shipping & Returns
-              </a>
+              <RouterLink to="/return-policy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Return Policy
+              </RouterLink>
             </li>
             <li>
-              <a href="#privacy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+              <RouterLink to="/shipping-policy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Shipping Policy
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/refunds" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Refund / Replacement
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/privacy-policy" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
                 Privacy Policy
-              </a>
+              </RouterLink>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Christian Journals -->
+        <div>
+          <h4 class="text-xs tracking-widest uppercase mb-6 text-gray-500">
+            CHRISTIAN JOURNALS
+          </h4>
+          <ul class="space-y-3 text-sm">
+            <li>
+              <RouterLink to="/christian-journals" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Christian Journals
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/WhomIfastfor" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Whom I Fast For
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/WhomIStudyfor" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Whom I Study For
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/WhomThyProfessionCallsfor" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
+                Whom Thy Profession Calls For
+              </RouterLink>
             </li>
           </ul>
         </div>
@@ -53,16 +92,6 @@
             <li>
               <a href="#instagram" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
                 Instagram
-              </a>
-            </li>
-            <li>
-              <a href="#twitter" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
-                Twitter
-              </a>
-            </li>
-            <li>
-              <a href="#youtube" class="text-gray-300 hover:text-white transition-colors uppercase tracking-wide">
-                YouTube
               </a>
             </li>
           </ul>
@@ -142,6 +171,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const currentYear = ref(new Date().getFullYear())
 </script>

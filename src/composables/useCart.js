@@ -1,18 +1,38 @@
 import { ref, computed } from 'vue'
 import { CART_STORAGE_KEY } from '../config/api'
+const whmJohn8BlackMockup = new URL(
+  '../../WHM-ASSETS/Product Id/WHMSIG-SHIRTS/WHM-JOHN8-/lat-unisex-fine-jersey-tee---6901-black-front-69766ce69bb16.png',
+  import.meta.url
+).href
 
 // Global cart state
 const cart = ref({ items: [] })
 const loading = ref(false)
 const error = ref(null)
 
+function isWhmJohn8Title(title) {
+  const t = String(title || '').toUpperCase().replace(/[^A-Z0-9]+/g, '')
+  return t.includes('WHM') && t.includes('JOHN8') && t.includes('5455')
+}
 function readCartFromStorage() {
   try {
     const raw = localStorage.getItem(CART_STORAGE_KEY)
     if (!raw) return { items: [] }
     const parsed = JSON.parse(raw)
     if (!parsed || !Array.isArray(parsed.items)) return { items: [] }
-    return { items: parsed.items }
+    // Patch legacy cart images for WHM John8 if the old asset was removed
+    const items = parsed.items.map(i => {
+      if (!i) return i
+      const title = i.title
+      const img = String(i.image || '')
+      const usesOldMock =
+        img.includes('lat-unisex-fine-jersey-tee---6901-black-front-69759e81482f4.png')
+      if (isWhmJohn8Title(title) && (!i.image || usesOldMock)) {
+        return { ...i, image: whmJohn8BlackMockup }
+      }
+      return i
+    })
+    return { items }
   } catch {
     return { items: [] }
   }
@@ -27,6 +47,10 @@ function persistCart(nextCart) {
   }
 }
 
+function normalizeVariantId(id) {
+  const s = String(id ?? '').trim().replace(/^#/, '')
+  return s || null
+}
 export function useCart() {
   // Computed properties
   const cartCount = computed(() => {
@@ -65,13 +89,13 @@ export function useCart() {
     loading.value = true
     error.value = null
     try {
-      const syncVariantId = Number(item?.sync_variant_id ?? item?.syncVariantId ?? item?.id)
-      if (!Number.isFinite(syncVariantId) || syncVariantId <= 0) {
+      const syncVariantId = normalizeVariantId(item?.sync_variant_id ?? item?.syncVariantId ?? item?.id)
+      if (!syncVariantId) {
         throw new Error('Invalid variant')
       }
 
       const next = readCartFromStorage()
-      const idx = next.items.findIndex(i => Number(i.sync_variant_id) === syncVariantId)
+      const idx = next.items.findIndex(i => normalizeVariantId(i.sync_variant_id) === syncVariantId)
       if (idx >= 0) {
         next.items[idx].quantity += quantity
       } else {
@@ -102,10 +126,10 @@ export function useCart() {
     loading.value = true
     error.value = null
     try {
-      const id = Number(syncVariantId)
+      const id = normalizeVariantId(syncVariantId)
       const q = Number(quantity)
       const next = readCartFromStorage()
-      const idx = next.items.findIndex(i => Number(i.sync_variant_id) === id)
+      const idx = next.items.findIndex(i => normalizeVariantId(i.sync_variant_id) === id)
       if (idx < 0) return true
 
       if (q <= 0) {
@@ -130,9 +154,9 @@ export function useCart() {
     loading.value = true
     error.value = null
     try {
-      const id = Number(syncVariantId)
+      const id = normalizeVariantId(syncVariantId)
       const next = readCartFromStorage()
-      next.items = next.items.filter(i => Number(i.sync_variant_id) !== id)
+      next.items = next.items.filter(i => normalizeVariantId(i.sync_variant_id) !== id)
       persistCart(next)
       return true
     } catch (err) {
@@ -155,7 +179,8 @@ export function useCart() {
         body: JSON.stringify({
           items: (cart.value?.items || []).map(i => ({
             sync_variant_id: i.sync_variant_id,
-            quantity: i.quantity
+            quantity: i.quantity,
+            image: i.image || null
           })),
           recipient
         })

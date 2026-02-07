@@ -6,13 +6,21 @@
       </div>
       
       <div class="hidden md:flex space-x-8 text-sm tracking-wide uppercase">
-        <a href="#shop" class="hover:text-gray-400 transition-colors">Shop</a>
-        <a href="#collections" class="hover:text-gray-400 transition-colors">Collections</a>
-        <a href="#about" class="hover:text-gray-400 transition-colors">About</a>
+        <RouterLink :to="{ path: '/', hash: '#shop' }" class="hover:text-gray-400 transition-colors">Shop</RouterLink>
+        <RouterLink to="/collections" class="hover:text-gray-400 transition-colors">Collections</RouterLink>
+        <RouterLink :to="{ path: '/collections', hash: '#whom-signatures' }" class="hover:text-gray-400 transition-colors">WHOM Signatures</RouterLink>
+        <RouterLink :to="{ path: '/', hash: '#about' }" class="hover:text-gray-400 transition-colors">About</RouterLink>
+        <RouterLink to="/refunds" class="hover:text-gray-400 transition-colors">Refund / Replacement</RouterLink>
       </div>
       
       <div class="flex items-center space-x-6 text-sm tracking-wide uppercase">
-        <a href="#account" class="hover:text-gray-400 transition-colors">Account</a>
+        <a
+          href="#account"
+          class="hover:text-gray-400 transition-colors"
+          title="Account is coming soon"
+        >
+          Account <span class="text-[10px] tracking-widest text-gray-500 ml-1">SOON</span>
+        </a>
         <button 
           @click="toggleCart"
           class="hover:text-gray-400 transition-colors relative"
@@ -148,6 +156,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { RouterLink } from 'vue-router'
 import { useCart } from '../composables/useCart'
 
 const { cartCount, cartItems, cartTotal, loading, loadCart, updateQuantity, removeItem, startCheckout } = useCart()
