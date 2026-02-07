@@ -102,3 +102,9 @@
 **Files:** netlify/functions/catalog.js, src/components/WhomSignaturesSection.vue, src/views/CollectionsView.vue, src/components/CollectionsShowcase.vue
 **Result:** Prevented `WHM John 3:16 / WHM- 3:16` items from appearing in WHOM SIGNATURES; keeps them in IDENTITY only.
 
+### 2026-02-06 - Rebrand Minimal → Maximal
+**Status:** SUCCESS ✅
+**Commit:** 430e6fc
+**Files:** HeroSection.vue, ProductGrid.vue, WhomSignaturesSection.vue, CollectionsView.vue, catalog.js, README.md, style.md
+**Result:** Replaced all minimal/minimalist branding with maximal/maximalist language across 7 files (17 replacements).
+

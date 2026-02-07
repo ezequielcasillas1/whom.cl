@@ -22,7 +22,7 @@
           <div class="border border-stone-gray bg-black/30 p-5">
             <div class="text-[11px] tracking-widest uppercase text-gray-500 mb-2">02 / MARK</div>
             <div class="text-sm text-gray-200 tracking-wide leading-relaxed">
-              Maximal geometry—built to read from a distance.
+              Maximal geometry—built to read with faith.
             </div>
           </div>
           <div class="border border-stone-gray bg-black/30 p-5">
