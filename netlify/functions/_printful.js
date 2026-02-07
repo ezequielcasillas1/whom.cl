@@ -79,3 +79,7 @@ export async function createPrintfulOrder({ order, confirm = true }) {
   })
 }
 
+export async function deleteStoreProduct(productId) {
+  return await printfulFetch(`/store/products/${productId}`, { method: 'DELETE' })
+}
+
