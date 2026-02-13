@@ -86,6 +86,14 @@
           </ul>
         </div>
 
+        <!-- Coming Soon: Mobile Apps -->
+        <div class="border border-stone-gray bg-black/30 p-8 text-center">
+          <div class="text-xs tracking-widest uppercase text-gray-500 mb-3">/ COMING SOON</div>
+          <p class="text-gray-300 text-sm leading-relaxed">
+            We are developing iOS and Android apps for users. Stay tuned.
+          </p>
+        </div>
+
         <div class="text-xs text-gray-500 tracking-wide leading-relaxed text-center pt-8">
           <RouterLink to="/christian-journals" class="hover:text-white transition-colors underline underline-offset-4">
             ← Back to Christian Journals
